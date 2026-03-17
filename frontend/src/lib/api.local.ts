@@ -174,6 +174,11 @@ export const api = {
       active_alerts: property.active_alerts || 0,
       monthly_electric_cost: property.monthly_electric_cost || 0,
       monthly_water_cost: property.monthly_water_cost || 0,
+      efficiency_score: property.water_efficiency_score && property.electric_efficiency_score
+        ? Math.round((property.water_efficiency_score + property.electric_efficiency_score) / 2)
+        : 85,
+      water_efficiency_score: property.water_efficiency_score || 87,
+      electric_efficiency_score: property.electric_efficiency_score || 82,
     };
     
     return Promise.resolve({ property, stats });
@@ -205,7 +210,20 @@ export const api = {
   },
 
   async getUsage(params: any): Promise<any[]> {
-    return Promise.resolve([]);
+    // Generate 30 days of mock usage data
+    const data = [];
+    const today = new Date();
+    for (let i = 29; i >= 0; i--) {
+      const date = new Date(today);
+      date.setDate(date.getDate() - i);
+      data.push({
+        date: date.toISOString().split('T')[0],
+        sum_value: Math.floor(Math.random() * 500) + 300,
+        avg_value: Math.floor(Math.random() * 50) + 25,
+        metric_type: params.metricType || 'electric_kwh',
+      });
+    }
+    return Promise.resolve(data);
   },
 
   async getAnomalies(params: any): Promise<any[]> {
