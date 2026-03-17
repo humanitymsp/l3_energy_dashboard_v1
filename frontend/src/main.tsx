@@ -1,12 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { Amplify } from 'aws-amplify';
-import awsconfig from './aws-exports';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import App from './App';
 import './index.css';
-
-Amplify.configure(awsconfig);
 
 const queryClient = new QueryClient({
   defaultOptions: {
