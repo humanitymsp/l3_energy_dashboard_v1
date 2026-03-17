@@ -33,8 +33,8 @@ export default function Layout({ children, user, signOut }: LayoutProps) {
                 <div className="flex items-center space-x-2 sm:space-x-3">
                   <img src="/l3-logo.png" alt="Lab3 Solutions" className="h-8 w-8 sm:h-10 sm:w-10" />
                   <div className="flex flex-col">
-                    <span className="text-xs sm:text-sm font-semibold text-gray-600 dark:text-gray-400">Lab3 Solutions</span>
-                    <span className="text-base sm:text-lg font-bold text-gray-900 dark:text-white">Nexus</span>
+                    <span className="text-xs sm:text-sm font-semibold text-gray-600 dark:text-gray-400">Property Intelligence</span>
+                    <span className="text-base sm:text-lg font-bold text-gray-900 dark:text-white">Jami Cloud</span>
                   </div>
                 </div>
               </div>
