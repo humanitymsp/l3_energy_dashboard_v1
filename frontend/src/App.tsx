@@ -8,6 +8,8 @@ import AlertsView from './pages/AlertsView';
 import IntegrationsView from './pages/IntegrationsView';
 import UniFiIntegrationView from './pages/UniFiIntegrationView';
 import DeviceMonitoring from './pages/DeviceMonitoring';
+import MonitoringDashboard from './pages/MonitoringDashboard';
+import SecurityMonitoring from './pages/SecurityMonitoring';
 
 // Mock user for public access
 const mockUser = {
@@ -30,6 +32,8 @@ function App() {
           <Route path="/devices" element={<DeviceMonitoring />} />
           <Route path="/integrations" element={<IntegrationsView />} />
           <Route path="/integrations/unifi" element={<UniFiIntegrationView />} />
+          <Route path="/monitoring" element={<MonitoringDashboard />} />
+          <Route path="/monitoring/security" element={<SecurityMonitoring />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Layout>

@@ -48,8 +48,7 @@ export default function MonitoringDashboard() {
           return (
             <div
               key={category.id}
-              className="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg hover:shadow-lg transition-shadow cursor-pointer"
-              onClick={() => setSelectedCategory(category.id)}
+              className="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg hover:shadow-lg transition-shadow"
             >
               <div className="p-5">
                 <div className="flex items-center">

@@ -15,8 +15,9 @@ export default function Layout({ children, user, signOut }: LayoutProps) {
 
   const navigation = [
     { name: 'Dashboard', href: '/', icon: Home },
+    { name: 'Monitoring', href: '/monitoring', icon: Activity },
     { name: 'Alerts', href: '/alerts', icon: AlertCircle },
-    { name: 'Devices', href: '/devices', icon: Activity },
+    { name: 'Devices', href: '/devices', icon: Building2 },
     { name: 'Integrations', href: '/integrations', icon: Settings },
   ];
 
