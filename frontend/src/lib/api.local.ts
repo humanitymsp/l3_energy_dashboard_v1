@@ -161,16 +161,19 @@ export const api = {
     if (!property) throw new Error('Property not found');
     
     const stats = {
-      totalUnits: property.units_count || 0,
-      occupiedUnits: property.occupied_units || 0,
-      vacantUnits: property.vacant_units || 0,
-      occupancyRate: property.occupied_units && property.units_count 
+      total_units: property.units_count || 0,
+      occupied_units: property.occupied_units || 0,
+      vacant_units: property.vacant_units || 0,
+      occupancy_rate: property.occupied_units && property.units_count 
         ? ((property.occupied_units / property.units_count) * 100).toFixed(1)
         : 0,
-      monthlyRevenue: (property.occupied_units || 0) * 1500,
-      avgUtilityCost: property.monthly_electric_cost && property.monthly_water_cost
-        ? property.monthly_electric_cost + property.monthly_water_cost
-        : 0,
+      total_electric_kwh: property.total_electric_kwh || 0,
+      total_water_gallons: property.total_water_gallons || 0,
+      month_over_month_electric: 5.2,
+      month_over_month_water: -2.1,
+      active_alerts: property.active_alerts || 0,
+      monthly_electric_cost: property.monthly_electric_cost || 0,
+      monthly_water_cost: property.monthly_water_cost || 0,
     };
     
     return Promise.resolve({ property, stats });
