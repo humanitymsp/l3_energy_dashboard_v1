@@ -8,6 +8,8 @@ import BuildingView from './pages/BuildingView';
 import UnitView from './pages/UnitView';
 import AlertsView from './pages/AlertsView';
 import IntegrationsView from './pages/IntegrationsView';
+import UniFiIntegrationView from './pages/UniFiIntegrationView';
+import DeviceMonitoring from './pages/DeviceMonitoring';
 
 function App() {
   return (
@@ -21,6 +23,7 @@ function App() {
               <Route path="/buildings/:buildingId" element={<BuildingView />} />
               <Route path="/units/:unitId" element={<UnitView />} />
               <Route path="/alerts" element={<AlertsView />} />
+              <Route path="/devices" element={<DeviceMonitoring />} />
               <Route path="/integrations" element={<IntegrationsView />} />
               <Route path="/integrations/unifi" element={<UniFiIntegrationView />} />
               <Route path="*" element={<Navigate to="/" replace />} />
