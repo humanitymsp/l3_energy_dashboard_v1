@@ -34,6 +34,7 @@ function App() {
           <Route path="/integrations/unifi" element={<UniFiIntegrationView />} />
           <Route path="/monitoring" element={<MonitoringDashboard />} />
           <Route path="/monitoring/security" element={<SecurityMonitoring />} />
+          <Route path="/analytics" element={<PredictiveAnalytics />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Layout>
@@ -41,4 +42,5 @@ function App() {
   );
 }
 
+export default App;
 export default App;
