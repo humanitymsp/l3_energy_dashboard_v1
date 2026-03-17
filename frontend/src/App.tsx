@@ -10,6 +10,7 @@ import UniFiIntegrationView from './pages/UniFiIntegrationView';
 import DeviceMonitoring from './pages/DeviceMonitoring';
 import MonitoringDashboard from './pages/MonitoringDashboard';
 import SecurityMonitoring from './pages/SecurityMonitoring';
+import PredictiveAnalytics from './pages/PredictiveAnalytics';
 
 // Mock user for public access
 const mockUser = {
@@ -42,5 +43,4 @@ function App() {
   );
 }
 
-export default App;
 export default App;

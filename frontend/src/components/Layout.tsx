@@ -81,10 +81,10 @@ export default function Layout({ children, user, signOut }: LayoutProps) {
               )}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="md:hidden p-2 rounded-md text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 touch-manipulation"
+                className="md:hidden p-3 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 touch-manipulation border border-gray-300 dark:border-gray-600"
                 aria-label="Toggle menu"
               >
-                {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+                {mobileMenuOpen ? <X className="h-7 w-7" /> : <Menu className="h-7 w-7" />}
               </button>
             </div>
           </div>
@@ -92,7 +92,7 @@ export default function Layout({ children, user, signOut }: LayoutProps) {
 
         {/* Mobile menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-gray-200 dark:border-gray-700">
+          <div className="md:hidden border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
             <div className="px-2 pt-2 pb-3 space-y-1">
               {navigation.map((item) => {
                 const Icon = item.icon;
@@ -102,13 +102,13 @@ export default function Layout({ children, user, signOut }: LayoutProps) {
                     key={item.name}
                     to={item.href}
                     onClick={() => setMobileMenuOpen(false)}
-                    className={`flex items-center px-3 py-3 rounded-md text-base font-medium touch-manipulation ${
+                    className={`flex items-center px-4 py-4 rounded-lg text-lg font-medium touch-manipulation ${
                       isActive
                         ? 'bg-blue-50 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300'
                         : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
                     }`}
                   >
-                    <Icon className="h-5 w-5 mr-3" />
+                    <Icon className="h-6 w-6 mr-3" />
                     {item.name}
                   </Link>
                 );
