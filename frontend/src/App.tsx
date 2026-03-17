@@ -1,6 +1,4 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { Authenticator } from '@aws-amplify/ui-react';
-import '@aws-amplify/ui-react/styles.css';
 import Layout from './components/Layout';
 import Dashboard from './pages/Dashboard';
 import PropertyView from './pages/PropertyView';
@@ -11,27 +9,31 @@ import IntegrationsView from './pages/IntegrationsView';
 import UniFiIntegrationView from './pages/UniFiIntegrationView';
 import DeviceMonitoring from './pages/DeviceMonitoring';
 
+// Mock user for public access
+const mockUser = {
+  username: 'Guest User',
+  attributes: {
+    email: 'guest@lab3solutions.com',
+  },
+};
+
 function App() {
   return (
-    <Authenticator>
-      {({ signOut, user }) => (
-        <BrowserRouter>
-          <Layout user={user} signOut={signOut}>
-            <Routes>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/properties/:propertyId" element={<PropertyView />} />
-              <Route path="/buildings/:buildingId" element={<BuildingView />} />
-              <Route path="/units/:unitId" element={<UnitView />} />
-              <Route path="/alerts" element={<AlertsView />} />
-              <Route path="/devices" element={<DeviceMonitoring />} />
-              <Route path="/integrations" element={<IntegrationsView />} />
-              <Route path="/integrations/unifi" element={<UniFiIntegrationView />} />
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-          </Layout>
-        </BrowserRouter>
-      )}
-    </Authenticator>
+    <BrowserRouter>
+      <Layout user={mockUser} signOut={undefined}>
+        <Routes>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/properties/:propertyId" element={<PropertyView />} />
+          <Route path="/buildings/:buildingId" element={<BuildingView />} />
+          <Route path="/units/:unitId" element={<UnitView />} />
+          <Route path="/alerts" element={<AlertsView />} />
+          <Route path="/devices" element={<DeviceMonitoring />} />
+          <Route path="/integrations" element={<IntegrationsView />} />
+          <Route path="/integrations/unifi" element={<UniFiIntegrationView />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Layout>
+    </BrowserRouter>
   );
 }
 
