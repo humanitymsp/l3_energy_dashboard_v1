@@ -1,0 +1,46 @@
+{
+  "name": "energy-dash",
+  "version": "1.0.0",
+  "description": "Utility Monitoring Dashboard for Apartment Complexes",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "install:all": "npm install && cd frontend && npm install && cd ../backend && npm install",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && npm run dev",
+    "build:frontend": "cd frontend && npm run build",
+    "build:backend": "cd backend && npm run build",
+    "build": "npm run build --workspaces",
+    "test": "npm run test --workspaces",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "setup": "node scripts/dev-setup.js",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "db:init": "docker-compose exec -T postgres psql -U postgres -d energy_dashboard -f /docker-entrypoint-initdb.d/01-schema.sql",
+    "db:seed": "docker-compose exec -T postgres psql -U postgres -d energy_dashboard -f /docker-entrypoint-initdb.d/02-seed.sql",
+    "db:reset": "docker-compose exec -T postgres psql -U postgres -c 'DROP DATABASE IF EXISTS energy_dashboard;' && docker-compose exec -T postgres psql -U postgres -c 'CREATE DATABASE energy_dashboard;' && npm run db:init && npm run db:seed",
+    "deploy:infrastructure": "cd infrastructure && npm run deploy",
+    "deploy:frontend": "cd frontend && npm run build && amplify publish",
+    "deploy:backend": "cd backend && npm run deploy",
+    "lint": "npm run lint --workspaces"
+  },
+  "keywords": [
+    "iot",
+    "utility-monitoring",
+    "energy-dashboard",
+    "aws-amplify",
+    "multifamily"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "yarn": "^1.22.22"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
