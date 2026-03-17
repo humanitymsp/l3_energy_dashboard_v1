@@ -156,14 +156,19 @@ export const api = {
   },
 
   async getProperty(propertyId: string): Promise<{ property: Property; stats: any }> {
-    const response = await fetch(`${API_BASE_URL}/api/properties/${propertyId}`);
-    return await response.json();
+    const properties = await this.getProperties();
+    const property = properties.find(p => p.id === propertyId);
+    if (!property) throw new Error('Property not found');
+    return Promise.resolve({ property, stats: {} });
   },
 
   async getBuildings(propertyId: string): Promise<any[]> {
-    const response = await fetch(`${API_BASE_URL}/api/buildings/${propertyId}`);
-    const data = await response.json();
-    return data.buildings || [];
+    const buildings = [
+      { id: 'bldg-001', name: 'Building A', property_id: 'prop-001', units: 24 },
+      { id: 'bldg-002', name: 'Building B', property_id: 'prop-001', units: 24 },
+      { id: 'bldg-003', name: 'Building A', property_id: 'prop-002', units: 36 },
+    ];
+    return Promise.resolve(buildings.filter(b => b.property_id === propertyId));
   },
 
   async getUnits(propertyId?: string, buildingId?: string): Promise<any[]> {
@@ -183,55 +188,71 @@ export const api = {
   },
 
   async getUsage(params: any): Promise<any[]> {
-    const queryString = new URLSearchParams(params).toString();
-    const response = await fetch(`${API_BASE_URL}/api/usage?${queryString}`);
-    const data = await response.json();
-    return data.usage || [];
+    return Promise.resolve([]);
   },
 
   async getAnomalies(params: any): Promise<any[]> {
-    const queryString = new URLSearchParams(params).toString();
-    const response = await fetch(`${API_BASE_URL}/api/anomalies?${queryString}`);
-    const data = await response.json();
-    return data.anomalies || [];
+    return Promise.resolve([]);
   },
 
   async getAlerts(params?: any): Promise<Alert[]> {
-    const queryString = params ? new URLSearchParams(params).toString() : '';
-    const url = queryString ? `${API_BASE_URL}/api/alerts?${queryString}` : `${API_BASE_URL}/api/alerts`;
-    const response = await fetch(url);
-    const data = await response.json();
-    return data.alerts || [];
+    return Promise.resolve([
+      {
+        id: 'alert-001',
+        type: 'leak',
+        severity: 'high',
+        title: 'Potential Water Leak Detected',
+        message: 'Unusual water flow detected in Unit 204',
+        property_id: 'prop-001',
+        property_name: 'Sunset Apartments',
+        building_id: 'bldg-001',
+        building_name: 'Building A',
+        unit_id: 'unit-204',
+        unit_number: '204',
+        timestamp: new Date(Date.now() - 2 * 3600000).toISOString(),
+        created_at: new Date(Date.now() - 2 * 3600000).toISOString(),
+        status: 'active',
+      },
+      {
+        id: 'alert-002',
+        type: 'power',
+        severity: 'medium',
+        title: 'High Power Usage',
+        message: 'Electric consumption 25% above average',
+        property_id: 'prop-002',
+        property_name: 'Riverside Complex',
+        building_id: 'bldg-003',
+        building_name: 'Building A',
+        unit_id: 'unit-312',
+        unit_number: '312',
+        timestamp: new Date(Date.now() - 5 * 3600000).toISOString(),
+        created_at: new Date(Date.now() - 5 * 3600000).toISOString(),
+        status: 'active',
+      },
+    ]);
   },
 
   async updateAlert(alertId: string, updates: any): Promise<Alert> {
-    const response = await fetch(`${API_BASE_URL}/api/alerts/${alertId}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(updates),
-    });
-    const data = await response.json();
-    return data.alert;
+    const alerts = await this.getAlerts();
+    const alert = alerts.find(a => a.id === alertId);
+    if (!alert) throw new Error('Alert not found');
+    return Promise.resolve({ ...alert, ...updates });
   },
 
   // UniFi Integration APIs
   async getUniFiDevices(): Promise<any[]> {
-    const response = await fetch(`${API_BASE_URL}/api/unifi/devices`);
-    return await response.json();
+    return Promise.resolve([]);
   },
 
   async getCorrelatedEvents(): Promise<any[]> {
-    const response = await fetch(`${API_BASE_URL}/api/unifi/correlated-events`);
-    return await response.json();
+    return Promise.resolve([]);
   },
 
   async getUniFiDeviceStatus(deviceId: string): Promise<any> {
-    const response = await fetch(`${API_BASE_URL}/api/unifi/devices/${deviceId}`);
-    return await response.json();
+    return Promise.resolve({});
   },
 
   async getOccupancyStatus(unitId: string): Promise<any> {
-    const response = await fetch(`${API_BASE_URL}/api/unifi/occupancy/${unitId}`);
-    return await response.json();
+    return Promise.resolve({});
   },
 };
