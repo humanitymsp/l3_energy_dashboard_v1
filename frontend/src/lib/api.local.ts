@@ -159,7 +159,21 @@ export const api = {
     const properties = await this.getProperties();
     const property = properties.find(p => p.id === propertyId);
     if (!property) throw new Error('Property not found');
-    return Promise.resolve({ property, stats: {} });
+    
+    const stats = {
+      totalUnits: property.units_count || 0,
+      occupiedUnits: property.occupied_units || 0,
+      vacantUnits: property.vacant_units || 0,
+      occupancyRate: property.occupied_units && property.units_count 
+        ? ((property.occupied_units / property.units_count) * 100).toFixed(1)
+        : 0,
+      monthlyRevenue: (property.occupied_units || 0) * 1500,
+      avgUtilityCost: property.monthly_electric_cost && property.monthly_water_cost
+        ? property.monthly_electric_cost + property.monthly_water_cost
+        : 0,
+    };
+    
+    return Promise.resolve({ property, stats });
   },
 
   async getBuildings(propertyId: string): Promise<any[]> {
