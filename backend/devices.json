@@ -1,0 +1,61 @@
+{
+  "shelly_devices": [
+    {
+      "id": "shelly-main-001",
+      "type": "shelly_pro_3em",
+      "name": "Sunset Apartments - Building A Main Panel",
+      "host": "192.168.1.100",
+      "property_id": "prop-001",
+      "building_id": "bldg-001",
+      "location": "Electrical Room"
+    },
+    {
+      "id": "shelly-main-002",
+      "type": "shelly_pro_3em",
+      "name": "Sunset Apartments - Building B Main Panel",
+      "host": "192.168.1.101",
+      "property_id": "prop-001",
+      "building_id": "bldg-002",
+      "location": "Electrical Room"
+    },
+    {
+      "id": "shelly-unit-101",
+      "type": "shelly_em",
+      "name": "Unit 101 - Electric Monitor",
+      "host": "192.168.1.110",
+      "property_id": "prop-001",
+      "building_id": "bldg-001",
+      "unit_id": "unit-101",
+      "location": "Unit Breaker Panel"
+    }
+  ],
+  "ecodirect_devices": [
+    {
+      "id": "ecodirect-main-001",
+      "serial_number": "EC-MAIN-001",
+      "name": "Sunset Apartments - Building A Main Water Line",
+      "property_id": "prop-001",
+      "building_id": "bldg-001",
+      "location": "Mechanical Room",
+      "device_type": "water_meter"
+    },
+    {
+      "id": "ecodirect-unit-101",
+      "serial_number": "EC-UNIT-101",
+      "name": "Unit 101 - Water Monitor",
+      "property_id": "prop-001",
+      "building_id": "bldg-001",
+      "unit_id": "unit-101",
+      "location": "Unit Water Closet",
+      "device_type": "water_sensor"
+    }
+  ],
+  "unifi_devices": {
+    "property_id_mapping": {
+      "prop-001": {
+        "cameras": ["camera-001", "camera-002"],
+        "leak_sensors": ["leak-001", "leak-002"]
+      }
+    }
+  }
+}
