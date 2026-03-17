@@ -10,19 +10,42 @@ export interface Property {
   active_alerts?: number;
   total_electric_kwh?: number;
   total_water_gallons?: number;
+  occupied_units?: number;
+  vacant_units?: number;
+  monthly_electric_cost?: number;
+  monthly_water_cost?: number;
+  cost_per_unit_electric?: number;
+  cost_per_unit_water?: number;
+  leak_alerts_prevented?: number;
+  estimated_savings_ytd?: number;
+  avg_response_time_hours?: number;
+  water_efficiency_score?: number;
+  electric_efficiency_score?: number;
+  shelly_devices?: number;
+  ecodirect_sensors?: number;
+  devices_online?: number;
+  devices_total?: number;
 }
 
 export interface Alert {
   id: string;
   property_id: string;
+  property_name?: string;
   building_id?: string;
+  building_name?: string;
   unit_id?: string;
+  unit_number?: string;
   severity: 'low' | 'medium' | 'high' | 'critical';
   status: 'active' | 'acknowledged' | 'resolved' | 'muted';
   title: string;
   message: string;
   created_at: string;
   sources?: string[];
+  estimated_cost?: number;
+  device_id?: string;
+  device_name?: string;
+  gallons_lost?: number;
+  kwh_over_baseline?: number;
 }
 
 export const api = {
