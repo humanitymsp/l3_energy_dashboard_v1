@@ -131,7 +131,7 @@ export default function Dashboard() {
                 to={`/properties/${property.id}`}
                 className="relative rounded-lg border border-gray-300 bg-white px-6 py-5 shadow-sm hover:border-gray-400 hover:shadow-md transition-all"
               >
-                {property.active_alerts > 0 && (
+                {(property.active_alerts ?? 0) > 0 && (
                   <span className="absolute top-3 right-3 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
                     {property.active_alerts} alerts
                   </span>
