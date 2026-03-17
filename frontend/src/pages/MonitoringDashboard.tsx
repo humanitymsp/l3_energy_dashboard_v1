@@ -4,8 +4,6 @@ import { Shield, Zap, Wifi, Thermometer, Camera, Lock, Activity, AlertTriangle, 
 import { mockMonitoringCategories, mockCorrelatedEvents, mockCameras, mockAccessPoints, mockNetworkStats } from '../lib/mockData/unifi';
 
 export default function MonitoringDashboard() {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-
   const categories = mockMonitoringCategories;
   const correlatedEvents = mockCorrelatedEvents;
 

@@ -32,7 +32,7 @@ export default function Layout({ children, user, signOut }: LayoutProps) {
                   <img src="/l3-logo.png" alt="Lab3 Solutions" className="h-10 w-10" />
                   <div className="flex flex-col">
                     <span className="text-sm font-semibold text-gray-600 dark:text-gray-400">Lab3 Solutions</span>
-                    <span className="text-lg font-bold text-gray-900 dark:text-white">Energy Dashboard</span>
+                    <span className="text-lg font-bold text-gray-900 dark:text-white">Nexus</span>
                   </div>
                 </div>
               </div>

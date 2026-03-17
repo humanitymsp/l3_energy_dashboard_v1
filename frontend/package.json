@@ -1,6 +1,6 @@
 {
-  "name": "energy-dash-frontend",
-  "version": "1.0.0",
+  "name": "lab3-nexus-frontend",
+  "version": "2.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
