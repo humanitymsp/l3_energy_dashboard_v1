@@ -170,7 +170,7 @@ export default function UniFiIntegrationView() {
                         {event.location.unitNumber && <span>Unit {event.location.unitNumber}</span>}
                         <span className="flex items-center space-x-1">
                           <span>Sources:</span>
-                          {event.sources.map((source, idx) => (
+                          {event.sources.map((source: string, idx: number) => (
                             <span key={idx} className="px-1.5 py-0.5 bg-gray-200 rounded text-xs">
                               {source}
                             </span>
