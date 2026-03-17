@@ -104,11 +104,11 @@ export const api = {
   },
 
   async getUnits(propertyId: string, buildingId?: string): Promise<Unit[]> {
-    const queryParams = buildingId ? { buildingId } : {};
+    const queryParams: Record<string, string> | undefined = buildingId ? { buildingId } : undefined;
     const response = await get({
       apiName: API_NAME,
       path: `/properties/${propertyId}/units`,
-      options: { queryParams },
+      options: queryParams ? { queryParams } : {},
     }).response;
     const data = await response.body.json() as any;
     return data.units;
