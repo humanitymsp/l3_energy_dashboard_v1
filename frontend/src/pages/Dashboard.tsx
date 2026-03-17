@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
-import { Building2, Zap, Droplet, AlertTriangle, Home, TrendingUp, TrendingDown } from 'lucide-react';
+import { Building2, Zap, Droplet, AlertTriangle, Home, TrendingUp, TrendingDown, Camera, Wifi } from 'lucide-react';
 import { api } from '../lib/api.local';
 
 export default function Dashboard() {
@@ -133,7 +133,7 @@ export default function Dashboard() {
               >
                 {(property.active_alerts ?? 0) > 0 && (
                   <span className="absolute top-3 right-3 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                    {property.active_alerts} alerts
+                    {property.active_alerts ?? 0} alerts
                   </span>
                 )}
                 <div className="space-y-3">
