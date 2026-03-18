@@ -174,12 +174,12 @@ export default function Dashboard() {
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
               {filteredProperties.map((property) => (
               <Link
                 key={property.id}
                 to={`/properties/${property.id}`}
-                className="relative rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-6 py-5 shadow-sm hover:border-gray-400 dark:hover:border-gray-500 hover:shadow-md transition-all"
+                className="relative rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 p-4 sm:p-5 shadow-sm hover:border-gray-400 dark:hover:border-gray-500 hover:shadow-md transition-all"
               >
                 {(property.active_alerts ?? 0) > 0 && (
                   <span className="absolute top-3 right-3 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-300">
