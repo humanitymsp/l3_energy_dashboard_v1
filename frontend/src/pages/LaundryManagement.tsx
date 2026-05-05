@@ -75,16 +75,16 @@ export default function LaundryManagement() {
   }
 
   return (
-    <div className="min-h-screen bg-background p-6">
+    <div className="min-h-screen bg-background p-3 sm:p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold gradient-text mb-2">Laundry Services</h1>
-          <p className="text-muted-foreground">High-level revenue overview for laundry services across all properties</p>
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold gradient-text mb-1 sm:mb-2">Laundry Services</h1>
+          <p className="text-sm sm:text-base text-muted-foreground">Revenue overview across all properties</p>
         </div>
 
         {/* Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-6 mb-6 sm:mb-8">
           <div className="metric-card">
             <div className="flex items-center">
               <div className="flex-shrink-0">
@@ -93,8 +93,8 @@ export default function LaundryManagement() {
                 </div>
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-muted-foreground">Today's Revenue</p>
-                <p className="text-3xl font-bold text-success">${todayRevenue.toFixed(2)}</p>
+                <p className="text-xs sm:text-sm font-medium text-muted-foreground">Today's Revenue</p>
+                <p className="text-2xl sm:text-3xl font-bold text-success">${todayRevenue.toFixed(2)}</p>
               </div>
             </div>
           </div>
@@ -107,8 +107,8 @@ export default function LaundryManagement() {
                 </div>
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-muted-foreground">Total Revenue</p>
-                <p className="text-3xl font-bold gradient-text">${totalRevenue.toFixed(2)}</p>
+                <p className="text-xs sm:text-sm font-medium text-muted-foreground">Total Revenue</p>
+                <p className="text-2xl sm:text-3xl font-bold gradient-text">${totalRevenue.toFixed(2)}</p>
               </div>
             </div>
           </div>
@@ -121,23 +121,23 @@ export default function LaundryManagement() {
                 </div>
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-muted-foreground">Total Sessions</p>
-                <p className="text-3xl font-bold text-info">{totalSessions.toLocaleString()}</p>
+                <p className="text-xs sm:text-sm font-medium text-muted-foreground">Total Sessions</p>
+                <p className="text-2xl sm:text-3xl font-bold text-info">{totalSessions.toLocaleString()}</p>
               </div>
             </div>
           </div>
         </div>
 
         {/* Property Revenue Overview */}
-        <div className="dashboard-card">
-          <div className="mb-6">
-            <h2 className="text-xl font-semibold text-foreground mb-2">Property Revenue Overview</h2>
-            <p className="text-muted-foreground">Laundry service revenue breakdown by property</p>
+        <div className="dashboard-card p-3 sm:p-6">
+          <div className="mb-4 sm:mb-6">
+            <h2 className="text-lg sm:text-xl font-semibold text-foreground mb-1 sm:mb-2">Property Revenue Overview</h2>
+            <p className="text-sm sm:text-base text-muted-foreground">Revenue breakdown by property</p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
             {revenueByProperty.map((property) => (
-              <div key={property.id} className="border border-border rounded-lg p-6">
+              <div key={property.id} className="border border-border rounded-lg p-3 sm:p-6">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center space-x-3">
                     <div className="p-2 bg-primary/10 rounded-lg">
@@ -150,22 +150,22 @@ export default function LaundryManagement() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4 mb-4">
-                  <div className="bg-muted/50 rounded-lg p-3">
+                <div className="grid grid-cols-2 gap-2 sm:gap-4 mb-4">
+                  <div className="bg-muted/50 rounded-lg p-2 sm:p-3">
                     <p className="text-xs text-muted-foreground">Today's Revenue</p>
-                    <p className="text-lg font-bold text-success">${property.todayRevenue.toFixed(2)}</p>
+                    <p className="text-base sm:text-lg font-bold text-success">${property.todayRevenue.toFixed(2)}</p>
                   </div>
-                  <div className="bg-muted/50 rounded-lg p-3">
+                  <div className="bg-muted/50 rounded-lg p-2 sm:p-3">
                     <p className="text-xs text-muted-foreground">Total Revenue</p>
-                    <p className="text-lg font-bold gradient-text">${property.totalRevenue.toFixed(2)}</p>
+                    <p className="text-base sm:text-lg font-bold gradient-text">${property.totalRevenue.toFixed(2)}</p>
                   </div>
-                  <div className="bg-muted/50 rounded-lg p-3">
+                  <div className="bg-muted/50 rounded-lg p-2 sm:p-3">
                     <p className="text-xs text-muted-foreground">Total Sessions</p>
-                    <p className="text-lg font-bold text-foreground">{property.totalSessions.toLocaleString()}</p>
+                    <p className="text-base sm:text-lg font-bold text-foreground">{property.totalSessions.toLocaleString()}</p>
                   </div>
-                  <div className="bg-muted/50 rounded-lg p-3">
+                  <div className="bg-muted/50 rounded-lg p-2 sm:p-3">
                     <p className="text-xs text-muted-foreground">Avg per Session</p>
-                    <p className="text-lg font-bold text-info">
+                    <p className="text-base sm:text-lg font-bold text-info">
                       ${property.totalSessions > 0 ? (property.totalRevenue / property.totalSessions).toFixed(2) : '0.00'}
                     </p>
                   </div>
@@ -194,27 +194,27 @@ export default function LaundryManagement() {
         </div>
 
         {/* Payment Method Summary */}
-        <div className="dashboard-card mt-6">
-          <div className="mb-6">
-            <h2 className="text-xl font-semibold text-foreground mb-2">Payment Methods</h2>
-            <p className="text-muted-foreground">Revenue breakdown by payment method across all properties</p>
+        <div className="dashboard-card mt-4 sm:mt-6 p-3 sm:p-6">
+          <div className="mb-4 sm:mb-6">
+            <h2 className="text-lg sm:text-xl font-semibold text-foreground mb-1 sm:mb-2">Payment Methods</h2>
+            <p className="text-sm sm:text-base text-muted-foreground">Revenue by payment method</p>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-4">
             {['card', 'mobile', 'coin', 'app'].map((method) => {
               const methodRevenue = revenue.reduce((sum, r) => sum + (r.payment_breakdown[method as keyof typeof r.payment_breakdown] || 0), 0);
               const percentage = totalRevenue > 0 ? (methodRevenue / totalRevenue) * 100 : 0;
               
               return (
-                <div key={method} className="bg-muted/50 rounded-lg p-4">
-                  <div className="flex items-center space-x-2 mb-2">
+                <div key={method} className="bg-muted/50 rounded-lg p-3 sm:p-4">
+                  <div className="flex items-center space-x-2 mb-1 sm:mb-2">
                     <div className="text-muted-foreground">
                       {getPaymentIcon(method)}
                     </div>
-                    <span className="text-sm font-medium text-foreground capitalize">{method}</span>
+                    <span className="text-xs sm:text-sm font-medium text-foreground capitalize">{method}</span>
                   </div>
-                  <p className="text-xl font-bold text-success">${methodRevenue.toFixed(2)}</p>
-                  <p className="text-xs text-muted-foreground">{percentage.toFixed(1)}% of total</p>
+                  <p className="text-lg sm:text-xl font-bold text-success">${methodRevenue.toFixed(2)}</p>
+                  <p className="text-xs text-muted-foreground">{percentage.toFixed(1)}%</p>
                 </div>
               );
             })}

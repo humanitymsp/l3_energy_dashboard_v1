@@ -61,18 +61,18 @@ export default function LaundryDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-background p-6">
+    <div className="min-h-screen bg-background p-3 sm:p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 sm:mb-8">
           <div>
-            <h1 className="text-3xl font-bold gradient-text mb-2">Laundry Revenue Analytics</h1>
-            <p className="text-muted-foreground">Revenue performance across all laundry services</p>
+            <h1 className="text-2xl sm:text-3xl font-bold gradient-text mb-1 sm:mb-2">Laundry Revenue Analytics</h1>
+            <p className="text-sm sm:text-base text-muted-foreground">Revenue performance across all properties</p>
           </div>
           <select
             value={selectedProperty}
             onChange={(e) => setSelectedProperty(e.target.value)}
-            className="mt-4 md:mt-0 px-4 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+            className="mt-3 md:mt-0 w-full md:w-auto px-4 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary text-sm sm:text-base"
           >
             <option value="all">All Properties</option>
             <option value="prop-001">NBC HQ - Building A</option>
@@ -81,12 +81,12 @@ export default function LaundryDashboard() {
         </div>
 
         {/* Key Metrics */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-6 sm:mb-8">
           <div className="metric-card">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-muted-foreground">Today's Revenue</p>
-                <p className="text-3xl font-bold text-success">${todayRevenue.toFixed(2)}</p>
+                <p className="text-xs sm:text-sm font-medium text-muted-foreground">Today's Revenue</p>
+                <p className="text-xl sm:text-3xl font-bold text-success">${todayRevenue.toFixed(2)}</p>
               </div>
               <div className="p-3 bg-success/10 rounded-lg">
                 <DollarSign className="h-6 w-6 text-success" />
@@ -97,8 +97,8 @@ export default function LaundryDashboard() {
           <div className="metric-card">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-muted-foreground">Total Revenue</p>
-                <p className="text-3xl font-bold gradient-text">${totalRevenue.toFixed(2)}</p>
+                <p className="text-xs sm:text-sm font-medium text-muted-foreground">Total Revenue</p>
+                <p className="text-xl sm:text-3xl font-bold gradient-text">${totalRevenue.toFixed(2)}</p>
               </div>
               <div className="p-3 bg-primary/10 rounded-lg">
                 <TrendingUp className="h-6 w-6 text-primary" />
@@ -109,8 +109,8 @@ export default function LaundryDashboard() {
           <div className="metric-card">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-muted-foreground">Total Sessions</p>
-                <p className="text-3xl font-bold text-info">{totalSessions.toLocaleString()}</p>
+                <p className="text-xs sm:text-sm font-medium text-muted-foreground">Total Sessions</p>
+                <p className="text-xl sm:text-3xl font-bold text-info">{totalSessions.toLocaleString()}</p>
               </div>
               <div className="p-3 bg-info/10 rounded-lg">
                 <Calendar className="h-6 w-6 text-info" />
@@ -121,8 +121,8 @@ export default function LaundryDashboard() {
           <div className="metric-card">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-muted-foreground">Avg per Session</p>
-                <p className="text-3xl font-bold gradient-text">${averageRevenuePerSession.toFixed(2)}</p>
+                <p className="text-xs sm:text-sm font-medium text-muted-foreground">Avg per Session</p>
+                <p className="text-xl sm:text-3xl font-bold gradient-text">${averageRevenuePerSession.toFixed(2)}</p>
               </div>
               <div className="p-3 bg-warning/10 rounded-lg">
                 <BarChart3 className="h-6 w-6 text-warning" />
@@ -132,8 +132,8 @@ export default function LaundryDashboard() {
         </div>
 
         {/* Revenue by Date */}
-        <div className="dashboard-card p-6 mb-8">
-          <h3 className="text-lg font-semibold text-foreground mb-4">Revenue Trend</h3>
+        <div className="dashboard-card p-3 sm:p-6 mb-4 sm:mb-8">
+          <h3 className="text-base sm:text-lg font-semibold text-foreground mb-3 sm:mb-4">Revenue Trend</h3>
           <div className="space-y-4">
             {revenueData.map((rev) => (
               <div key={rev.id} className="flex items-center justify-between">
@@ -148,7 +148,7 @@ export default function LaundryDashboard() {
                     <p className="font-medium text-foreground">${rev.total_revenue.toFixed(2)}</p>
                     <p className="text-xs text-muted-foreground">{rev.total_sessions} sessions</p>
                   </div>
-                  <div className="w-24 bg-muted rounded-full h-2">
+                  <div className="hidden sm:block w-24 bg-muted rounded-full h-2">
                     <div
                       className="bg-primary h-2 rounded-full"
                       style={{ width: `${(rev.total_revenue / 250) * 100}%` }}
@@ -161,21 +161,21 @@ export default function LaundryDashboard() {
         </div>
 
         {/* Payment Methods */}
-        <div className="dashboard-card p-6">
-          <h3 className="text-lg font-semibold text-foreground mb-4">Payment Methods</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="dashboard-card p-3 sm:p-6">
+          <h3 className="text-base sm:text-lg font-semibold text-foreground mb-3 sm:mb-4">Payment Methods</h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-4">
             {['card', 'mobile', 'coin', 'app'].map((method) => {
               const methodRevenue = revenueData.reduce((sum, r) => sum + (r.payment_breakdown[method as keyof typeof r.payment_breakdown] || 0), 0);
               const percentage = totalRevenue > 0 ? (methodRevenue / totalRevenue) * 100 : 0;
 
               return (
-                <div key={method} className="bg-muted/50 rounded-lg p-4">
-                  <div className="flex items-center space-x-2 mb-2">
+                <div key={method} className="bg-muted/50 rounded-lg p-3 sm:p-4">
+                  <div className="flex items-center space-x-2 mb-1 sm:mb-2">
                     <div className="text-muted-foreground">{getPaymentIcon(method)}</div>
-                    <span className="text-sm font-medium text-foreground capitalize">{method}</span>
+                    <span className="text-xs sm:text-sm font-medium text-foreground capitalize">{method}</span>
                   </div>
-                  <p className="text-xl font-bold text-success">${methodRevenue.toFixed(2)}</p>
-                  <p className="text-xs text-muted-foreground">{percentage.toFixed(1)}% of total</p>
+                  <p className="text-lg sm:text-xl font-bold text-success">${methodRevenue.toFixed(2)}</p>
+                  <p className="text-xs text-muted-foreground">{percentage.toFixed(1)}%</p>
                 </div>
               );
             })}
