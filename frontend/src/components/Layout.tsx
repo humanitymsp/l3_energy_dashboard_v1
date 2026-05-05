@@ -1,6 +1,6 @@
 import { ReactNode, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, Building2, AlertCircle, Settings, LogOut, Zap, Droplet, AlertTriangle, Activity, Moon, Sun, Brain, Menu, X } from 'lucide-react';
+import { Home, Building2, AlertCircle, Settings, LogOut, Zap, Droplet, AlertTriangle, Activity, Moon, Sun, Brain, Menu, X, DollarSign } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 
 interface LayoutProps {
@@ -18,6 +18,7 @@ export default function Layout({ children, user, signOut }: LayoutProps) {
     { name: 'Dashboard', href: '/', icon: Home },
     { name: 'Monitoring', href: '/monitoring', icon: Activity },
     { name: 'Analytics', href: '/analytics', icon: Brain },
+    { name: 'Laundry', href: '/laundry', icon: DollarSign },
     { name: 'Alerts', href: '/alerts', icon: AlertCircle },
     { name: 'Devices', href: '/devices', icon: Building2 },
     { name: 'Integrations', href: '/integrations', icon: Settings },

@@ -11,6 +11,8 @@ import DeviceMonitoring from './pages/DeviceMonitoring';
 import MonitoringDashboard from './pages/MonitoringDashboard';
 import SecurityMonitoring from './pages/SecurityMonitoring';
 import PredictiveAnalytics from './pages/PredictiveAnalytics';
+import LaundryManagement from './pages/LaundryManagement';
+import LaundryDashboard from './pages/LaundryDashboard';
 
 // Mock user for public access
 const mockUser = {
@@ -36,6 +38,8 @@ function App() {
           <Route path="/monitoring" element={<MonitoringDashboard />} />
           <Route path="/monitoring/security" element={<SecurityMonitoring />} />
           <Route path="/analytics" element={<PredictiveAnalytics />} />
+          <Route path="/laundry" element={<LaundryManagement />} />
+          <Route path="/laundry/dashboard" element={<LaundryDashboard />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Layout>

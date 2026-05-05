@@ -1,6 +1,15 @@
 // Mock data API client - works without backend
 const API_BASE_URL = import.meta.env.VITE_API_ENDPOINT || '';
 
+import {
+  LaundryMachine,
+  LaundrySession,
+  LaundryRevenue,
+  LaundryAlert,
+  LaundryAnalytics,
+  LaundrySettings
+} from './types/laundry';
+
 export interface Property {
   id: string;
   name: string;
@@ -281,6 +290,326 @@ export const api = {
 
   async getCorrelatedEvents(): Promise<any[]> {
     return Promise.resolve([]);
+  },
+
+  // Laundry Management API Methods
+  async getLaundryMachines(propertyId?: string): Promise<LaundryMachine[]> {
+    const machines: LaundryMachine[] = [
+      {
+        id: 'wm-001',
+        property_id: 'prop-001',
+        building_id: 'bldg-001',
+        machine_type: 'washer',
+        brand: 'Speed Queen',
+        model: 'HC5',
+        serial_number: 'SQ-HC5-001',
+        location: 'Building A - Floor 1',
+        status: 'online',
+        last_maintenance: '2024-03-01',
+        next_maintenance: '2024-06-01',
+        total_cycles: 15420,
+        cycles_today: 23,
+        cycles_this_month: 487,
+        revenue_today: 115.00,
+        revenue_this_month: 2435.00,
+        average_cycle_time: 35,
+        current_cycle_start: new Date(Date.now() - 15 * 60000).toISOString(),
+        error_codes: [],
+        efficiency_score: 92,
+        water_usage_per_cycle: 45,
+        energy_usage_per_cycle: 2.1,
+        installation_date: '2022-01-15',
+        warranty_expiry: '2025-01-15'
+      },
+      {
+        id: 'dr-001',
+        property_id: 'prop-001',
+        building_id: 'bldg-001',
+        machine_type: 'dryer',
+        brand: 'Speed Queen',
+        model: 'DC5',
+        serial_number: 'SQ-DC5-001',
+        location: 'Building A - Floor 1',
+        status: 'online',
+        last_maintenance: '2024-03-01',
+        next_maintenance: '2024-06-01',
+        total_cycles: 16890,
+        cycles_today: 21,
+        cycles_this_month: 456,
+        revenue_today: 84.00,
+        revenue_this_month: 1824.00,
+        average_cycle_time: 42,
+        current_cycle_start: new Date(Date.now() - 8 * 60000).toISOString(),
+        error_codes: [],
+        efficiency_score: 89,
+        energy_usage_per_cycle: 3.2,
+        installation_date: '2022-01-15',
+        warranty_expiry: '2025-01-15'
+      },
+      {
+        id: 'wm-002',
+        property_id: 'prop-001',
+        building_id: 'bldg-002',
+        machine_type: 'washer',
+        brand: 'Maytag',
+        model: 'MLG5000P',
+        serial_number: 'MG-MLG5-002',
+        location: 'Building B - Floor 2',
+        status: 'maintenance',
+        last_maintenance: '2024-04-15',
+        next_maintenance: '2024-07-15',
+        total_cycles: 12340,
+        cycles_today: 0,
+        cycles_this_month: 234,
+        revenue_today: 0,
+        revenue_this_month: 1170.00,
+        average_cycle_time: 38,
+        error_codes: ['E02', 'E05'],
+        efficiency_score: 76,
+        water_usage_per_cycle: 48,
+        energy_usage_per_cycle: 2.3,
+        installation_date: '2022-03-20',
+        warranty_expiry: '2025-03-20'
+      },
+      {
+        id: 'dr-002',
+        property_id: 'prop-002',
+        building_id: 'bldg-003',
+        machine_type: 'dryer',
+        brand: 'Whirlpool',
+        model: 'WGD5000DW',
+        serial_number: 'WP-WGD5-002',
+        location: 'Building C - Floor 1',
+        status: 'offline',
+        last_maintenance: '2024-02-15',
+        next_maintenance: '2024-05-15',
+        total_cycles: 9870,
+        cycles_today: 0,
+        cycles_this_month: 156,
+        revenue_today: 0,
+        revenue_this_month: 624.00,
+        average_cycle_time: 45,
+        error_codes: ['POWER_FAILURE'],
+        efficiency_score: 45,
+        energy_usage_per_cycle: 3.5,
+        installation_date: '2022-06-10',
+        warranty_expiry: '2025-06-10'
+      }
+    ];
+
+    if (propertyId) {
+      return Promise.resolve(machines.filter(m => m.property_id === propertyId));
+    }
+    return Promise.resolve(machines);
+  },
+
+  async getLaundrySessions(propertyId?: string, limit?: number): Promise<LaundrySession[]> {
+    const sessions: LaundrySession[] = [
+      {
+        id: 'session-001',
+        machine_id: 'wm-001',
+        property_id: 'prop-001',
+        user_id: 'user-123',
+        unit_number: '204',
+        start_time: new Date(Date.now() - 15 * 60000).toISOString(),
+        cycle_type: 'normal',
+        cost: 5.00,
+        payment_method: 'mobile',
+        status: 'active',
+        machine_type: 'washer',
+        revenue: 5.00,
+        water_usage: 45,
+        energy_usage: 2.1
+      },
+      {
+        id: 'session-002',
+        machine_id: 'dr-001',
+        property_id: 'prop-001',
+        user_id: 'user-456',
+        unit_number: '312',
+        start_time: new Date(Date.now() - 8 * 60000).toISOString(),
+        cycle_type: 'normal',
+        cost: 4.00,
+        payment_method: 'app',
+        status: 'active',
+        machine_type: 'dryer',
+        revenue: 4.00,
+        energy_usage: 3.2
+      },
+      {
+        id: 'session-003',
+        machine_id: 'wm-002',
+        property_id: 'prop-001',
+        user_id: 'user-789',
+        unit_number: '156',
+        start_time: new Date(Date.now() - 2 * 3600000).toISOString(),
+        end_time: new Date(Date.now() - 2 * 3600000 + 35 * 60000).toISOString(),
+        duration: 35,
+        cycle_type: 'heavy',
+        cost: 7.00,
+        payment_method: 'card',
+        status: 'completed',
+        machine_type: 'washer',
+        revenue: 7.00,
+        water_usage: 52,
+        energy_usage: 2.8
+      }
+    ];
+
+    let filteredSessions = propertyId ? sessions.filter(s => s.property_id === propertyId) : sessions;
+    if (limit) {
+      filteredSessions = filteredSessions.slice(0, limit);
+    }
+    return Promise.resolve(filteredSessions);
+  },
+
+  async getLaundryRevenue(propertyId?: string, period?: string): Promise<LaundryRevenue[]> {
+    const revenue: LaundryRevenue[] = [
+      {
+        id: 'rev-001',
+        property_id: 'prop-001',
+        date: new Date().toISOString().split('T')[0],
+        total_revenue: 199.00,
+        washer_revenue: 115.00,
+        dryer_revenue: 84.00,
+        total_sessions: 44,
+        washer_sessions: 23,
+        dryer_sessions: 21,
+        peak_hour: 19,
+        average_session_duration: 38.5,
+        payment_breakdown: {
+          card: 79.60,
+          mobile: 59.70,
+          coin: 39.80,
+          app: 19.90
+        }
+      },
+      {
+        id: 'rev-002',
+        property_id: 'prop-002',
+        date: new Date().toISOString().split('T')[0],
+        total_revenue: 156.00,
+        washer_revenue: 92.00,
+        dryer_revenue: 64.00,
+        total_sessions: 34,
+        washer_sessions: 18,
+        dryer_sessions: 16,
+        peak_hour: 20,
+        average_session_duration: 41.2,
+        payment_breakdown: {
+          card: 62.40,
+          mobile: 46.80,
+          coin: 31.20,
+          app: 15.60
+        }
+      }
+    ];
+
+    return Promise.resolve(propertyId ? revenue.filter(r => r.property_id === propertyId) : revenue);
+  },
+
+  async getLaundryAlerts(propertyId?: string): Promise<LaundryAlert[]> {
+    const alerts: LaundryAlert[] = [
+      {
+        id: 'alert-laundry-001',
+        property_id: 'prop-001',
+        machine_id: 'wm-002',
+        type: 'maintenance_due',
+        severity: 'medium',
+        title: 'Maintenance Required',
+        message: 'Washer WM-002 requires maintenance - Error codes E02, E05 detected',
+        timestamp: new Date(Date.now() - 4 * 3600000).toISOString(),
+        resolved: false,
+        machine_type: 'washer',
+        machine_location: 'Building B - Floor 2'
+      },
+      {
+        id: 'alert-laundry-002',
+        property_id: 'prop-002',
+        machine_id: 'dr-002',
+        type: 'offline',
+        severity: 'high',
+        title: 'Machine Offline',
+        message: 'Dryer DR-002 is offline - Power failure detected',
+        timestamp: new Date(Date.now() - 6 * 3600000).toISOString(),
+        resolved: false,
+        machine_type: 'dryer',
+        machine_location: 'Building C - Floor 1'
+      },
+      {
+        id: 'alert-laundry-003',
+        property_id: 'prop-001',
+        type: 'revenue_drop',
+        severity: 'low',
+        title: 'Revenue Drop Detected',
+        message: 'Daily revenue down 15% compared to weekly average',
+        timestamp: new Date(Date.now() - 2 * 3600000).toISOString(),
+        resolved: false
+      }
+    ];
+
+    return Promise.resolve(propertyId ? alerts.filter(a => a.property_id === propertyId) : alerts);
+  },
+
+  async getLaundryAnalytics(propertyId: string, period: 'daily' | 'weekly' | 'monthly'): Promise<LaundryAnalytics> {
+    const analytics: LaundryAnalytics = {
+      property_id: propertyId,
+      period: period,
+      total_revenue: period === 'daily' ? 199.00 : period === 'weekly' ? 1393.00 : 5572.00,
+      revenue_growth: 12.5,
+      total_sessions: period === 'daily' ? 44 : period === 'weekly' ? 308 : 1232,
+      session_growth: 8.3,
+      average_revenue_per_session: 4.52,
+      peak_usage_hours: [18, 19, 20],
+      machine_utilization: 78.5,
+      maintenance_costs: period === 'daily' ? 0 : period === 'weekly' ? 150 : 600,
+      profit_margin: 68.2,
+      top_performing_machines: [
+        { machine_id: 'wm-001', revenue: 115.00, sessions: 23 },
+        { machine_id: 'dr-001', revenue: 84.00, sessions: 21 }
+      ],
+      revenue_forecast: [
+        { period: 'Next Week', predicted_revenue: 1450.00, confidence: 0.85 },
+        { period: 'Next Month', predicted_revenue: 5800.00, confidence: 0.78 }
+      ]
+    };
+
+    return Promise.resolve(analytics);
+  },
+
+  async getLaundrySettings(propertyId: string): Promise<LaundrySettings> {
+    const settings: LaundrySettings = {
+      property_id: propertyId,
+      washer_cost: {
+        quick: 3.00,
+        normal: 5.00,
+        heavy: 7.00,
+        delicate: 4.00
+      },
+      dryer_cost: {
+        quick: 2.50,
+        normal: 4.00,
+        heavy: 6.00,
+        delicate: 3.00
+      },
+      operating_hours: {
+        open: '06:00',
+        close: '22:00'
+      },
+      maintenance_reminder_days: 90,
+      revenue_alert_threshold: 15,
+      auto_maintenance_scheduling: true,
+      payment_methods: ['card', 'mobile', 'app', 'coin']
+    };
+
+    return Promise.resolve(settings);
+  },
+
+  async updateLaundrySettings(propertyId: string, settings: Partial<LaundrySettings>): Promise<LaundrySettings> {
+    // In a real implementation, this would update the database
+    const currentSettings = await this.getLaundrySettings(propertyId);
+    const updatedSettings = { ...currentSettings, ...settings };
+    return Promise.resolve(updatedSettings);
   },
 
   async getUniFiDeviceStatus(deviceId: string): Promise<any> {
