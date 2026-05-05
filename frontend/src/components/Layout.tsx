@@ -24,8 +24,8 @@ export default function Layout({ children, user, signOut }: LayoutProps) {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <nav className="bg-white dark:bg-gray-800 shadow-sm border-b dark:border-gray-700 sticky top-0 z-50">
+    <div className="min-h-screen bg-background">
+      <nav className="nav-header shadow-lg sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex items-center">
@@ -33,8 +33,8 @@ export default function Layout({ children, user, signOut }: LayoutProps) {
                 <div className="flex items-center space-x-2 sm:space-x-3">
                   <img src="/l3-logo.png" alt="Lab3 Solutions" className="h-8 w-8 sm:h-10 sm:w-10" />
                   <div className="flex flex-col">
-                    <span className="text-xs sm:text-sm font-semibold text-gray-600 dark:text-gray-400">Property Dashboard</span>
-                    <span className="text-base sm:text-lg font-bold text-gray-900 dark:text-white">Sabin CDC</span>
+                    <span className="text-xs sm:text-sm font-semibold text-muted-foreground">Property Dashboard</span>
+                    <span className="text-base sm:text-lg font-bold gradient-text">Sabin CDC</span>
                   </div>
                 </div>
               </div>
@@ -46,10 +46,10 @@ export default function Layout({ children, user, signOut }: LayoutProps) {
                     <Link
                       key={item.name}
                       to={item.href}
-                      className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
+                      className={`inline-flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                         isActive
-                          ? 'border-blue-500 text-gray-900 dark:text-white'
-                          : 'border-transparent text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-gray-600 hover:text-gray-700 dark:hover:text-gray-300'
+                          ? 'bg-primary text-primary-foreground shadow-md'
+                          : 'text-muted-foreground hover:bg-accent hover:text-foreground'
                       }`}
                     >
                       <Icon className="h-4 w-4 mr-2" />

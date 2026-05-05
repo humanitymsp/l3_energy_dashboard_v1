@@ -73,70 +73,70 @@ export default function Dashboard() {
 
       {/* Summary Stats */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <div className="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
-          <div className="p-5">
-            <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <Home className="h-6 w-6 text-gray-400 dark:text-gray-300" />
+        <div className="metric-card">
+          <div className="flex items-center">
+            <div className="flex-shrink-0">
+              <div className="p-3 bg-primary/10 rounded-lg">
+                <Home className="h-6 w-6 text-primary" />
               </div>
-              <div className="ml-5 w-0 flex-1">
-                <dl>
-                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Properties</dt>
-                  <dd className="text-3xl font-semibold text-gray-900 dark:text-white">{properties.length}</dd>
-                </dl>
-              </div>
+            </div>
+            <div className="ml-5 w-0 flex-1">
+              <dl>
+                <dt className="text-sm font-medium text-muted-foreground truncate">Properties</dt>
+                <dd className="text-3xl font-bold gradient-text">{properties.length}</dd>
+              </dl>
             </div>
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
-          <div className="p-5">
-            <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <Building2 className="h-6 w-6 text-gray-400 dark:text-gray-300" />
+        <div className="metric-card">
+          <div className="flex items-center">
+            <div className="flex-shrink-0">
+              <div className="p-3 bg-primary/10 rounded-lg">
+                <Building2 className="h-6 w-6 text-primary" />
               </div>
-              <div className="ml-5 w-0 flex-1">
-                <dl>
-                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Total Units</dt>
-                  <dd className="text-3xl font-semibold text-gray-900 dark:text-white">
-                    {properties.reduce((sum, p) => sum + (p.units_count || 0), 0)}
-                  </dd>
-                </dl>
-              </div>
+            </div>
+            <div className="ml-5 w-0 flex-1">
+              <dl>
+                <dt className="text-sm font-medium text-muted-foreground truncate">Total Units</dt>
+                <dd className="text-3xl font-bold gradient-text">
+                  {properties.reduce((sum, p) => sum + (p.units_count || 0), 0)}
+                </dd>
+              </dl>
             </div>
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
-          <div className="p-5">
-            <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <AlertTriangle className={`h-6 w-6 ${criticalAlerts.length > 0 ? 'text-red-500' : 'text-gray-400 dark:text-gray-300'}`} />
+        <div className="metric-card">
+          <div className="flex items-center">
+            <div className="flex-shrink-0">
+              <div className={`p-3 rounded-lg ${criticalAlerts.length > 0 ? 'bg-destructive/10' : 'bg-muted'}`}>
+                <AlertTriangle className={`h-6 w-6 ${criticalAlerts.length > 0 ? 'text-destructive' : 'text-muted-foreground'}`} />
               </div>
-              <div className="ml-5 w-0 flex-1">
-                <dl>
-                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Active Alerts</dt>
-                  <dd className={`text-3xl font-semibold ${activeAlerts.length > 0 ? 'text-red-600 dark:text-red-400' : 'text-gray-900 dark:text-white'}`}>
-                    {activeAlerts.length}
-                  </dd>
-                </dl>
-              </div>
+            </div>
+            <div className="ml-5 w-0 flex-1">
+              <dl>
+                <dt className="text-sm font-medium text-muted-foreground truncate">Active Alerts</dt>
+                <dd className={`text-3xl font-bold ${activeAlerts.length > 0 ? 'text-destructive' : 'gradient-text'}`}>
+                  {activeAlerts.length}
+                </dd>
+              </dl>
             </div>
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
-          <div className="p-5">
-            <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <TrendingUp className="h-6 w-6 text-green-500" />
+        <div className="metric-card">
+          <div className="flex items-center">
+            <div className="flex-shrink-0">
+              <div className="p-3 bg-success/10 rounded-lg">
+                <TrendingUp className="h-6 w-6 text-success" />
               </div>
-              <div className="ml-5 w-0 flex-1">
-                <dl>
-                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Status</dt>
-                  <dd className="text-lg font-semibold text-green-600 dark:text-green-400">Operational</dd>
-                </dl>
-              </div>
+            </div>
+            <div className="ml-5 w-0 flex-1">
+              <dl>
+                <dt className="text-sm font-medium text-muted-foreground truncate">Status</dt>
+                <dd className="text-lg font-bold text-success animate-slide-in">Operational</dd>
+              </dl>
             </div>
           </div>
         </div>
@@ -179,37 +179,41 @@ export default function Dashboard() {
               <Link
                 key={property.id}
                 to={`/properties/${property.id}`}
-                className="relative rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 p-4 sm:p-5 shadow-sm hover:border-gray-400 dark:hover:border-gray-500 hover:shadow-md transition-all"
+                className="relative dashboard-card p-4 sm:p-5 group"
               >
                 {(property.active_alerts ?? 0) > 0 && (
-                  <span className="absolute top-3 right-3 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-300">
+                  <span className="absolute top-3 right-3 status-indicator bg-destructive text-destructive-foreground">
                     {property.active_alerts ?? 0} alerts
                   </span>
                 )}
                 <div className="space-y-3">
                   <div className="flex items-center space-x-3">
                     <div className="flex-shrink-0">
-                      <Building2 className="h-10 w-10 text-blue-600 dark:text-blue-400" />
+                      <div className="p-2 bg-primary/10 rounded-lg">
+                        <Building2 className="h-8 w-8 text-primary" />
+                      </div>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-base font-semibold text-gray-900 dark:text-white">{property.name}</p>
-                      <p className="text-sm text-gray-500 dark:text-gray-400 truncate">{property.address}</p>
+                      <p className="text-base font-bold text-foreground">{property.name}</p>
+                      <p className="text-sm text-muted-foreground truncate">{property.address}</p>
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-4 text-sm">
-                    <div>
-                      <p className="text-gray-500 dark:text-gray-400">Units</p>
-                      <p className="font-medium text-gray-900 dark:text-white">{property.units_count}</p>
+                    <div className="bg-muted/50 rounded-lg p-2">
+                      <p className="text-muted-foreground text-xs">Units</p>
+                      <p className="font-bold text-foreground">{property.units_count}</p>
                     </div>
-                    <div>
-                      <p className="text-gray-500 dark:text-gray-400">Buildings</p>
-                      <p className="font-medium text-gray-900 dark:text-white">{property.buildings_count}</p>
+                    <div className="bg-muted/50 rounded-lg p-2">
+                      <p className="text-muted-foreground text-xs">Buildings</p>
+                      <p className="font-bold text-foreground">{property.buildings_count}</p>
                     </div>
                   </div>
                   {property.estimated_savings_ytd && (
-                    <p className="text-sm text-green-600 dark:text-green-400 font-medium">
-                      ${property.estimated_savings_ytd.toLocaleString()} YTD savings
-                    </p>
+                    <div className="bg-success/10 rounded-lg p-2 text-center">
+                      <p className="text-sm font-bold text-success">
+                        ${property.estimated_savings_ytd.toLocaleString()} YTD savings
+                      </p>
+                    </div>
                   )}
                 </div>
               </Link>
