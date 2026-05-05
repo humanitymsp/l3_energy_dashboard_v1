@@ -54,8 +54,8 @@ export const api = {
     return Promise.resolve([
       {
         id: 'prop-001',
-        name: 'Sunset Apartments',
-        address: '123 Sunset Blvd, Los Angeles, CA 90028',
+        name: 'NBC HQ',
+        address: '30 Rockefeller Plaza, New York, NY 10112',
         units_count: 48,
         buildings_count: 2,
         active_alerts: 3,
@@ -79,8 +79,8 @@ export const api = {
       },
       {
         id: 'prop-002',
-        name: 'Riverside Complex',
-        address: '456 River Rd, Portland, OR 97201',
+        name: 'NBC HQ',
+        address: '30 Rockefeller Plaza, New York, NY 10112',
         units_count: 72,
         buildings_count: 3,
         active_alerts: 5,
@@ -104,8 +104,8 @@ export const api = {
       },
       {
         id: 'prop-003',
-        name: 'Downtown Lofts',
-        address: '789 Main St, Seattle, WA 98101',
+        name: 'NBC HQ',
+        address: '30 Rockefeller Plaza, New York, NY 10112',
         units_count: 36,
         buildings_count: 1,
         active_alerts: 1,
@@ -129,8 +129,8 @@ export const api = {
       },
       {
         id: 'prop-004',
-        name: 'Parkside Residences',
-        address: '321 Park Ave, San Francisco, CA 94102',
+        name: 'NBC HQ',
+        address: '30 Rockefeller Plaza, New York, NY 10112',
         units_count: 54,
         buildings_count: 2,
         active_alerts: 2,
