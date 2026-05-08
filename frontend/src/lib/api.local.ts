@@ -464,48 +464,53 @@ export const api = {
   },
 
   async getLaundryRevenue(propertyId?: string, period?: string): Promise<LaundryRevenue[]> {
-    const revenue: LaundryRevenue[] = [
-      {
-        id: 'rev-001',
-        property_id: 'prop-001',
-        date: new Date().toISOString().split('T')[0],
-        total_revenue: 199.00,
-        washer_revenue: 115.00,
-        dryer_revenue: 84.00,
-        total_sessions: 44,
-        washer_sessions: 23,
-        dryer_sessions: 21,
-        peak_hour: 19,
-        average_session_duration: 38.5,
-        payment_breakdown: {
-          card: 79.60,
-          mobile: 59.70,
-          coin: 39.80,
-          app: 19.90
-        }
-      },
-      {
-        id: 'rev-002',
-        property_id: 'prop-002',
-        date: new Date().toISOString().split('T')[0],
-        total_revenue: 156.00,
-        washer_revenue: 92.00,
-        dryer_revenue: 64.00,
-        total_sessions: 34,
-        washer_sessions: 18,
-        dryer_sessions: 16,
-        peak_hour: 20,
-        average_session_duration: 41.2,
-        payment_breakdown: {
-          card: 62.40,
-          mobile: 46.80,
-          coin: 31.20,
-          app: 15.60
-        }
-      }
-    ];
+    // Generate 30 days of mock revenue data for both properties
+    const revenue: LaundryRevenue[] = [];
+    const properties = ['prop-001', 'prop-002'];
+    const baseRevenues = { 'prop-001': 185, 'prop-002': 145 };
+    const baseSessions = { 'prop-001': 42, 'prop-002': 32 };
 
-    return Promise.resolve(propertyId ? revenue.filter(r => r.property_id === propertyId) : revenue);
+    for (let dayOffset = 0; dayOffset < 30; dayOffset++) {
+      const date = new Date();
+      date.setDate(date.getDate() - dayOffset);
+      const dateStr = date.toISOString().split('T')[0];
+      const dayOfWeek = date.getDay();
+      // Weekend boost
+      const weekendMultiplier = (dayOfWeek === 0 || dayOfWeek === 6) ? 1.25 : 1.0;
+      // Random variance
+      const variance = 0.8 + Math.sin(dayOffset * 0.7) * 0.3;
+
+      for (const propId of properties) {
+        const base = baseRevenues[propId as keyof typeof baseRevenues];
+        const baseSess = baseSessions[propId as keyof typeof baseSessions];
+        const totalRev = +(base * weekendMultiplier * variance).toFixed(2);
+        const sessions = Math.round(baseSess * weekendMultiplier * variance);
+        const cardPct = 0.4, mobilePct = 0.3, coinPct = 0.2, appPct = 0.1;
+
+        revenue.push({
+          id: `rev-${propId}-${dayOffset}`,
+          property_id: propId,
+          date: dateStr,
+          total_revenue: totalRev,
+          washer_revenue: +(totalRev * 0.58).toFixed(2),
+          dryer_revenue: +(totalRev * 0.42).toFixed(2),
+          total_sessions: sessions,
+          washer_sessions: Math.round(sessions * 0.55),
+          dryer_sessions: Math.round(sessions * 0.45),
+          peak_hour: dayOfWeek >= 5 ? 14 : 19,
+          average_session_duration: 35 + Math.random() * 10,
+          payment_breakdown: {
+            card: +(totalRev * cardPct).toFixed(2),
+            mobile: +(totalRev * mobilePct).toFixed(2),
+            coin: +(totalRev * coinPct).toFixed(2),
+            app: +(totalRev * appPct).toFixed(2)
+          }
+        });
+      }
+    }
+
+    const filtered = propertyId ? revenue.filter(r => r.property_id === propertyId) : revenue;
+    return Promise.resolve(filtered);
   },
 
   async getLaundryAlerts(propertyId?: string): Promise<LaundryAlert[]> {

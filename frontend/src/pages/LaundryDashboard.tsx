@@ -1,10 +1,9 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Link, useLocation } from 'react-router-dom';
 import { 
   TrendingUp,
   DollarSign,
-  Calendar,
   BarChart3,
   CreditCard,
   Smartphone,
@@ -14,18 +13,37 @@ import {
   ArrowDown,
   RefreshCw,
   Clock,
-  Target
+  Target,
+  Download
 } from 'lucide-react';
 import { api } from '../lib/api.local';
 
+type DateRange = 'today' | '7d' | '14d' | '30d' | 'this_month';
+
+function getDateRangeFilter(range: DateRange): { start: string; end: string } {
+  const now = new Date();
+  const end = now.toISOString().split('T')[0];
+  let start: Date;
+  switch (range) {
+    case 'today': start = now; break;
+    case '7d': start = new Date(now); start.setDate(start.getDate() - 6); break;
+    case '14d': start = new Date(now); start.setDate(start.getDate() - 13); break;
+    case '30d': start = new Date(now); start.setDate(start.getDate() - 29); break;
+    case 'this_month': start = new Date(now.getFullYear(), now.getMonth(), 1); break;
+    default: start = new Date(now); start.setDate(start.getDate() - 29);
+  }
+  return { start: start.toISOString().split('T')[0], end };
+}
+
 export default function LaundryDashboard() {
   const [selectedProperty, setSelectedProperty] = useState<string>('all');
+  const [dateRange, setDateRange] = useState<DateRange>('30d');
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
   const location = useLocation();
   const queryClient = useQueryClient();
 
   // Fetch revenue data
-  const { data: revenueData = [], isLoading: revenueLoading, isFetching } = useQuery({
+  const { data: allRevenueData = [], isLoading: revenueLoading, isFetching } = useQuery({
     queryKey: ['laundryRevenue', selectedProperty],
     queryFn: () => api.getLaundryRevenue(selectedProperty === 'all' ? undefined : selectedProperty),
   });
@@ -36,10 +54,34 @@ export default function LaundryDashboard() {
     queryFn: () => api.getProperties(),
   });
 
+  const { start, end } = getDateRangeFilter(dateRange);
+  const revenueData = useMemo(() => {
+    return allRevenueData.filter(r => r.date >= start && r.date <= end);
+  }, [allRevenueData, start, end]);
+
   const handleRefresh = () => {
     queryClient.invalidateQueries({ queryKey: ['laundryRevenue'] });
     queryClient.invalidateQueries({ queryKey: ['properties'] });
     setLastUpdated(new Date());
+  };
+
+  const handleExportCSV = () => {
+    const headers = ['Date', 'Property', 'Revenue', 'Sessions', 'Card', 'Mobile', 'Coin', 'App'];
+    const rows = revenueData.map(r => {
+      const propName = properties.find(p => p.id === r.property_id)?.name || r.property_id;
+      return [r.date, propName, r.total_revenue.toFixed(2), r.total_sessions,
+        r.payment_breakdown.card.toFixed(2), r.payment_breakdown.mobile.toFixed(2),
+        r.payment_breakdown.coin.toFixed(2), r.payment_breakdown.app.toFixed(2)
+      ].join(',');
+    });
+    const csv = [headers.join(','), ...rows].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `laundry-analytics-${start}-to-${end}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   if (revenueLoading) {
@@ -75,9 +117,9 @@ export default function LaundryDashboard() {
   const revenueChange = yesterdayRevenue > 0 ? ((todayRevenue - yesterdayRevenue) / yesterdayRevenue) * 100 : 0;
 
   // Projected monthly
+  const daysInRange = revenueData.length > 0 ? new Set(revenueData.map(r => r.date)).size : 1;
   const daysInMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate();
-  const dayOfMonth = new Date().getDate();
-  const projectedMonthly = dayOfMonth > 0 ? (totalRevenue / dayOfMonth) * daysInMonth : 0;
+  const projectedMonthly = daysInRange > 0 ? (totalRevenue / daysInRange) * daysInMonth : 0;
 
   // Peak revenue day
   const peakDay = revenueData.reduce((max, r) => r.total_revenue > (max?.total_revenue || 0) ? r : max, revenueData[0]);
@@ -121,7 +163,7 @@ export default function LaundryDashboard() {
         </div>
 
         {/* Header */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8 gap-3">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6 gap-3">
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold gradient-text mb-1 sm:mb-2">Revenue Analytics</h1>
             <div className="flex items-center space-x-2 text-xs sm:text-sm text-muted-foreground">
@@ -148,6 +190,39 @@ export default function LaundryDashboard() {
               <RefreshCw className={`h-4 w-4 ${isFetching ? 'animate-spin' : ''}`} />
             </button>
           </div>
+        </div>
+
+        {/* Date Range Picker + Export */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6 sm:mb-8">
+          <div className="flex flex-wrap items-center gap-1.5">
+            {([
+              { key: 'today', label: 'Today' },
+              { key: '7d', label: '7 Days' },
+              { key: '14d', label: '14 Days' },
+              { key: '30d', label: '30 Days' },
+              { key: 'this_month', label: 'This Month' },
+            ] as { key: DateRange; label: string }[]).map(({ key, label }) => (
+              <button
+                key={key}
+                onClick={() => setDateRange(key)}
+                className={`px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-all ${
+                  dateRange === key
+                    ? 'bg-primary text-primary-foreground shadow-sm'
+                    : 'bg-muted/50 text-muted-foreground hover:text-foreground hover:bg-muted'
+                }`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+          <button
+            onClick={handleExportCSV}
+            className="flex items-center space-x-1.5 px-3 py-1.5 bg-muted/50 hover:bg-muted text-foreground rounded-md text-xs sm:text-sm font-medium transition-colors"
+            title="Export to CSV"
+          >
+            <Download className="h-3.5 w-3.5" />
+            <span>Export CSV</span>
+          </button>
         </div>
 
         {/* Key Metrics */}
@@ -179,7 +254,7 @@ export default function LaundryDashboard() {
               <div>
                 <p className="text-xs sm:text-sm font-medium text-muted-foreground">Projected Monthly</p>
                 <p className="text-xl sm:text-2xl font-bold gradient-text">${projectedMonthly.toFixed(0)}</p>
-                <p className="text-xs text-muted-foreground mt-1">Day {dayOfMonth}/{daysInMonth}</p>
+                <p className="text-xs text-muted-foreground mt-1">{daysInRange} days tracked</p>
               </div>
               <div className="p-2 sm:p-3 bg-primary/10 rounded-lg">
                 <Target className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />

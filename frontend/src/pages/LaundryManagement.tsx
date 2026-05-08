@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Link, useLocation } from 'react-router-dom';
 import { 
@@ -14,18 +14,58 @@ import {
   ArrowDown,
   RefreshCw,
   Clock,
-  Target
+  Target,
+  Download,
+  AlertTriangle,
+  Bell,
+  X
 } from 'lucide-react';
 import { api } from '../lib/api.local';
 
+type DateRange = 'today' | '7d' | '14d' | '30d' | 'this_month' | 'custom';
+
+function getDateRangeFilter(range: DateRange): { start: string; end: string } {
+  const now = new Date();
+  const end = now.toISOString().split('T')[0];
+  let start: Date;
+
+  switch (range) {
+    case 'today':
+      start = now;
+      break;
+    case '7d':
+      start = new Date(now);
+      start.setDate(start.getDate() - 6);
+      break;
+    case '14d':
+      start = new Date(now);
+      start.setDate(start.getDate() - 13);
+      break;
+    case '30d':
+      start = new Date(now);
+      start.setDate(start.getDate() - 29);
+      break;
+    case 'this_month':
+      start = new Date(now.getFullYear(), now.getMonth(), 1);
+      break;
+    default:
+      start = new Date(now);
+      start.setDate(start.getDate() - 29);
+  }
+
+  return { start: start.toISOString().split('T')[0], end };
+}
+
 export default function LaundryManagement() {
   const [selectedProperty, setSelectedProperty] = useState<string>('all');
+  const [dateRange, setDateRange] = useState<DateRange>('30d');
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
+  const [showAlerts, setShowAlerts] = useState(false);
   const location = useLocation();
   const queryClient = useQueryClient();
 
   // Fetch revenue data
-  const { data: revenue = [], isLoading: revenueLoading, isFetching } = useQuery({
+  const { data: allRevenue = [], isLoading: revenueLoading, isFetching } = useQuery({
     queryKey: ['laundryRevenue', selectedProperty],
     queryFn: () => api.getLaundryRevenue(selectedProperty === 'all' ? undefined : selectedProperty),
   });
@@ -36,10 +76,48 @@ export default function LaundryManagement() {
     queryFn: () => api.getProperties(),
   });
 
+  // Fetch alerts
+  const { data: alerts = [] } = useQuery({
+    queryKey: ['laundryAlerts', selectedProperty],
+    queryFn: () => api.getLaundryAlerts(selectedProperty === 'all' ? undefined : selectedProperty),
+  });
+
+  // Filter revenue by date range
+  const { start, end } = getDateRangeFilter(dateRange);
+  const revenue = useMemo(() => {
+    return allRevenue.filter(r => r.date >= start && r.date <= end);
+  }, [allRevenue, start, end]);
+
   const handleRefresh = () => {
     queryClient.invalidateQueries({ queryKey: ['laundryRevenue'] });
     queryClient.invalidateQueries({ queryKey: ['properties'] });
+    queryClient.invalidateQueries({ queryKey: ['laundryAlerts'] });
     setLastUpdated(new Date());
+  };
+
+  const handleExportCSV = () => {
+    const headers = ['Date', 'Property', 'Revenue', 'Sessions', 'Card', 'Mobile', 'Coin', 'App'];
+    const rows = revenue.map(r => {
+      const propName = properties.find(p => p.id === r.property_id)?.name || r.property_id;
+      return [
+        r.date,
+        propName,
+        r.total_revenue.toFixed(2),
+        r.total_sessions,
+        r.payment_breakdown.card.toFixed(2),
+        r.payment_breakdown.mobile.toFixed(2),
+        r.payment_breakdown.coin.toFixed(2),
+        r.payment_breakdown.app.toFixed(2),
+      ].join(',');
+    });
+    const csv = [headers.join(','), ...rows].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `laundry-revenue-${start}-to-${end}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   const getPaymentIcon = (method: string) => {
@@ -52,7 +130,7 @@ export default function LaundryManagement() {
     }
   };
 
-  // Calculate totals
+  // Calculate totals from filtered data
   const totalRevenue = revenue.reduce((sum, r) => sum + r.total_revenue, 0);
   const totalSessions = revenue.reduce((sum, r) => sum + r.total_sessions, 0);
   const todayRevenue = revenue.find(r => r.date === new Date().toISOString().split('T')[0])?.total_revenue || 0;
@@ -65,9 +143,13 @@ export default function LaundryManagement() {
   const revenueChange = yesterdayRevenue > 0 ? ((todayRevenue - yesterdayRevenue) / yesterdayRevenue) * 100 : 0;
 
   // Projected monthly total
+  const daysInRange = revenue.length > 0 ? new Set(revenue.map(r => r.date)).size : 1;
   const daysInMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate();
-  const dayOfMonth = new Date().getDate();
-  const projectedMonthly = dayOfMonth > 0 ? (totalRevenue / dayOfMonth) * daysInMonth : 0;
+  const projectedMonthly = daysInRange > 0 ? (totalRevenue / daysInRange) * daysInMonth : 0;
+
+  // Revenue alerts based on thresholds
+  const unresolvedAlerts = alerts.filter(a => !a.resolved);
+  const highSeverityCount = unresolvedAlerts.filter(a => a.severity === 'high').length;
 
   // Group revenue by property
   const revenueByProperty = properties.map(property => {
@@ -77,6 +159,11 @@ export default function LaundryManagement() {
     const propTodayRevenue = propertyRevenue.find(r => r.date === new Date().toISOString().split('T')[0])?.total_revenue || 0;
     const propYesterdayRevenue = propertyRevenue.find(r => r.date === yesterdayStr)?.total_revenue || 0;
     const propChange = propYesterdayRevenue > 0 ? ((propTodayRevenue - propYesterdayRevenue) / propYesterdayRevenue) * 100 : 0;
+
+    // Weekly average for alert threshold
+    const weekRevenue = propertyRevenue.slice(0, 7);
+    const weekAvg = weekRevenue.length > 0 ? weekRevenue.reduce((s, r) => s + r.total_revenue, 0) / weekRevenue.length : 0;
+    const belowThreshold = weekAvg > 0 && propTodayRevenue < weekAvg * 0.75;
     
     return {
       ...property,
@@ -84,7 +171,9 @@ export default function LaundryManagement() {
       totalSessions: propertySessions,
       todayRevenue: propTodayRevenue,
       revenueChange: propChange,
-      revenueHistory: propertyRevenue.slice(0, 7)
+      revenueHistory: propertyRevenue.slice(0, 7),
+      belowThreshold,
+      weeklyAvg: weekAvg
     };
   });
 
@@ -134,8 +223,8 @@ export default function LaundryManagement() {
           </Link>
         </div>
 
-        {/* Header with filter and refresh */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8 gap-3">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6 gap-3">
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold gradient-text mb-1 sm:mb-2">Laundry Services</h1>
             <div className="flex items-center space-x-2 text-xs sm:text-sm text-muted-foreground">
@@ -155,6 +244,18 @@ export default function LaundryManagement() {
               ))}
             </select>
             <button
+              onClick={() => setShowAlerts(!showAlerts)}
+              className="relative p-2 border border-border rounded-lg hover:bg-muted transition-colors"
+              title="Revenue Alerts"
+            >
+              <Bell className="h-4 w-4" />
+              {unresolvedAlerts.length > 0 && (
+                <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-destructive text-destructive-foreground text-xs flex items-center justify-center">
+                  {unresolvedAlerts.length}
+                </span>
+              )}
+            </button>
+            <button
               onClick={handleRefresh}
               className="p-2 border border-border rounded-lg hover:bg-muted transition-colors"
               title="Refresh data"
@@ -162,6 +263,75 @@ export default function LaundryManagement() {
               <RefreshCw className={`h-4 w-4 ${isFetching ? 'animate-spin' : ''}`} />
             </button>
           </div>
+        </div>
+
+        {/* Alerts Panel */}
+        {showAlerts && unresolvedAlerts.length > 0 && (
+          <div className="mb-4 sm:mb-6 border border-destructive/30 bg-destructive/5 rounded-lg p-3 sm:p-4 animate-slide-up-sm">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center space-x-2">
+                <AlertTriangle className="h-4 w-4 text-destructive" />
+                <h3 className="text-sm font-semibold text-foreground">Active Alerts ({unresolvedAlerts.length})</h3>
+              </div>
+              <button onClick={() => setShowAlerts(false)} className="p-1 hover:bg-muted rounded">
+                <X className="h-3 w-3" />
+              </button>
+            </div>
+            <div className="space-y-2">
+              {unresolvedAlerts.map(alert => (
+                <div key={alert.id} className="flex items-start space-x-3 p-2 bg-background rounded-lg">
+                  <div className={`mt-0.5 w-2 h-2 rounded-full flex-shrink-0 ${
+                    alert.severity === 'high' ? 'bg-destructive' : alert.severity === 'medium' ? 'bg-warning' : 'bg-muted-foreground'
+                  }`}></div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-medium text-foreground">{alert.title}</p>
+                    <p className="text-xs text-muted-foreground truncate">{alert.message}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      {new Date(alert.timestamp).toLocaleString(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}
+                    </p>
+                  </div>
+                  <span className={`text-xs px-1.5 py-0.5 rounded font-medium ${
+                    alert.severity === 'high' ? 'bg-destructive/10 text-destructive' :
+                    alert.severity === 'medium' ? 'bg-warning/10 text-warning' :
+                    'bg-muted text-muted-foreground'
+                  }`}>{alert.severity}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Date Range Picker + Export */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6 sm:mb-8">
+          <div className="flex flex-wrap items-center gap-1.5">
+            {([
+              { key: 'today', label: 'Today' },
+              { key: '7d', label: '7 Days' },
+              { key: '14d', label: '14 Days' },
+              { key: '30d', label: '30 Days' },
+              { key: 'this_month', label: 'This Month' },
+            ] as { key: DateRange; label: string }[]).map(({ key, label }) => (
+              <button
+                key={key}
+                onClick={() => setDateRange(key)}
+                className={`px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-all ${
+                  dateRange === key
+                    ? 'bg-primary text-primary-foreground shadow-sm'
+                    : 'bg-muted/50 text-muted-foreground hover:text-foreground hover:bg-muted'
+                }`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+          <button
+            onClick={handleExportCSV}
+            className="flex items-center space-x-1.5 px-3 py-1.5 bg-muted/50 hover:bg-muted text-foreground rounded-md text-xs sm:text-sm font-medium transition-colors"
+            title="Export to CSV"
+          >
+            <Download className="h-3.5 w-3.5" />
+            <span>Export CSV</span>
+          </button>
         </div>
 
         {/* Summary Cards */}
@@ -239,7 +409,15 @@ export default function LaundryManagement() {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
             {revenueByProperty.map((property) => (
-              <div key={property.id} className="border border-border rounded-lg p-3 sm:p-5 hover:border-primary/30 transition-colors">
+              <div key={property.id} className={`border rounded-lg p-3 sm:p-5 transition-colors ${
+                property.belowThreshold ? 'border-destructive/40 bg-destructive/5' : 'border-border hover:border-primary/30'
+              }`}>
+                {property.belowThreshold && (
+                  <div className="flex items-center space-x-1.5 mb-2 text-xs text-destructive font-medium">
+                    <AlertTriangle className="h-3 w-3" />
+                    <span>Below weekly avg (${property.weeklyAvg.toFixed(0)}/day)</span>
+                  </div>
+                )}
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center space-x-3">
                     <div className="p-2 bg-primary/10 rounded-lg">
