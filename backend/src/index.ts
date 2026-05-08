@@ -43,8 +43,8 @@ app.get('/health', (_req: Request, res: Response) => {
   });
 });
 
-// Mock data
-const mockProperties = [
+// Mock data (mutable for admin CRUD)
+let mockProperties: any[] = [
   {
     id: 'prop-001',
     name: 'Sunset Apartments',
@@ -147,10 +147,10 @@ const mockProperties = [
   },
 ];
 
-// Shelly and Ecodirect device inventory
-// Each unit has: 1 Shelly EM (electric) + 1 Ecodirect (water)
-// Each building has: 1 Shelly Pro 3EM (main panel) + 1 Ecodirect (main water line)
-const mockDevices = [
+// Shelly and Dragino device inventory
+// Each unit has: 1 Shelly EM (electric) + 1 Dragino (water)
+// Each building has: 1 Shelly Pro 3EM (main panel) + 1 Dragino (main water line)
+let mockDevices: any[] = [
   // Building-level Shelly Pro 3EM devices (3-phase monitoring)
   {
     id: 'shelly-main-001',
@@ -429,6 +429,12 @@ const mockDevices = [
     alert: 'Usage 180% above baseline - possible broken sprinkler',
     last_reading: new Date().toISOString(),
   },
+];
+
+let mockBuildings: any[] = [
+  { id: 'bldg-001', property_id: 'prop-001', name: 'Building A', address: '123 NW 23rd Ave, Building A', floor_count: 4, unit_count: 24, active_alerts: 2, total_electric_kwh: 6200, total_water_gallons: 22800, occupied_units: 22, vacant_units: 2 },
+  { id: 'bldg-002', property_id: 'prop-001', name: 'Building B', address: '123 NW 23rd Ave, Building B', floor_count: 4, unit_count: 24, active_alerts: 1, total_electric_kwh: 6250, total_water_gallons: 22800, occupied_units: 22, vacant_units: 2 },
+  { id: 'bldg-003', property_id: 'prop-002', name: 'Building C', address: '456 SE Hawthorne Blvd, Building C', floor_count: 6, unit_count: 72, active_alerts: 2, total_electric_kwh: 18920, total_water_gallons: 68400, occupied_units: 68, vacant_units: 4 },
 ];
 
 const mockAlerts = [
@@ -748,35 +754,84 @@ app.get('/api/devices', async (req: Request, res: Response) => {
 app.get('/api/buildings/:propertyId', async (req: Request, res: Response) => {
   try {
     const { propertyId } = req.params;
-    
-    const buildings = [
-      {
-        id: 'bldg-001',
-        property_id: propertyId,
-        name: 'Building A',
-        floor_count: 4,
-        unit_count: 24,
-        active_alerts: 2,
-        total_electric_kwh: 6200,
-        total_water_gallons: 22800,
-      },
-      {
-        id: 'bldg-002',
-        property_id: propertyId,
-        name: 'Building B',
-        floor_count: 4,
-        unit_count: 24,
-        active_alerts: 1,
-        total_electric_kwh: 6250,
-        total_water_gallons: 22800,
-      },
-    ];
-    
+    const buildings = mockBuildings.filter(b => b.property_id === propertyId);
     res.json({ buildings });
   } catch (error) {
     logger.error('Error fetching buildings', { error });
     res.status(500).json({ error: 'Internal server error' });
   }
+});
+
+// === ADMIN CRUD ENDPOINTS ===
+
+// Properties CRUD
+app.post('/api/properties', (req: Request, res: Response) => {
+  const id = `prop-${String(mockProperties.length + 1).padStart(3, '0')}`;
+  const property = { id, ...req.body, active_alerts: 0, devices_online: 0, devices_total: 0 };
+  mockProperties.push(property);
+  res.status(201).json(property);
+});
+
+app.put('/api/properties/:propertyId', (req: Request, res: Response) => {
+  const idx = mockProperties.findIndex(p => p.id === req.params.propertyId);
+  if (idx === -1) return res.status(404).json({ error: 'Property not found' });
+  mockProperties[idx] = { ...mockProperties[idx], ...req.body };
+  return res.json(mockProperties[idx]);
+});
+
+app.delete('/api/properties/:propertyId', (req: Request, res: Response) => {
+  const idx = mockProperties.findIndex(p => p.id === req.params.propertyId);
+  if (idx === -1) return res.status(404).json({ error: 'Property not found' });
+  mockProperties.splice(idx, 1);
+  return res.json({ deleted: true });
+});
+
+// Buildings CRUD
+app.get('/api/admin/buildings', (_req: Request, res: Response) => {
+  res.json({ buildings: mockBuildings });
+});
+
+app.post('/api/buildings', (req: Request, res: Response) => {
+  const id = `bldg-${String(mockBuildings.length + 1).padStart(3, '0')}`;
+  const building = { id, ...req.body, active_alerts: 0, total_electric_kwh: 0, total_water_gallons: 0, occupied_units: 0, vacant_units: req.body.unit_count || 0 };
+  mockBuildings.push(building);
+  res.status(201).json(building);
+});
+
+app.put('/api/buildings/:buildingId', (req: Request, res: Response) => {
+  const idx = mockBuildings.findIndex(b => b.id === req.params.buildingId);
+  if (idx === -1) return res.status(404).json({ error: 'Building not found' });
+  mockBuildings[idx] = { ...mockBuildings[idx], ...req.body };
+  return res.json(mockBuildings[idx]);
+});
+
+app.delete('/api/buildings/:buildingId', (req: Request, res: Response) => {
+  const idx = mockBuildings.findIndex(b => b.id === req.params.buildingId);
+  if (idx === -1) return res.status(404).json({ error: 'Building not found' });
+  mockBuildings.splice(idx, 1);
+  return res.json({ deleted: true });
+});
+
+// Devices CRUD
+app.post('/api/devices', (req: Request, res: Response) => {
+  const id = `device-${Date.now()}`;
+  const device = { id, ...req.body, status: 'offline', last_reading: new Date().toISOString() };
+  mockDevices.push(device);
+  res.status(201).json(device);
+});
+
+app.put('/api/devices/:deviceId', (req: Request, res: Response) => {
+  const idx = mockDevices.findIndex(d => d.id === req.params.deviceId);
+  if (idx === -1) return res.status(404).json({ error: 'Device not found' });
+  mockDevices[idx] = { ...mockDevices[idx], ...req.body };
+  return res.json(mockDevices[idx]);
+});
+
+app.delete('/api/devices/:deviceId', (req: Request, res: Response) => {
+  const idx = mockDevices.findIndex(d => d.id === req.params.deviceId);
+  if (idx === -1) return res.status(404).json({ error: 'Device not found' });
+  mockDevices.splice(idx, 1);
+  return res.json({ deleted: true });
 });
 
 // Start server

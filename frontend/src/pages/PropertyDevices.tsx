@@ -35,7 +35,7 @@ export default function PropertyDevices() {
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold text-foreground">Device Deployment</h2>
-        <p className="text-muted-foreground mt-1">Every unit monitored with Shelly EM (electric) + Ecodirect (water)</p>
+        <p className="text-muted-foreground mt-1">Every unit monitored with Shelly EM (electric) + Dragino (water)</p>
       </div>
 
       {/* Summary */}
@@ -55,7 +55,7 @@ export default function PropertyDevices() {
           <div className="flex items-center">
             <Droplet className="h-6 w-6 text-primary mr-3" />
             <div>
-              <dt className="text-sm font-medium text-muted-foreground">Ecodirect Sensors</dt>
+              <dt className="text-sm font-medium text-muted-foreground">Dragino Sensors</dt>
               <dd className="text-2xl font-semibold text-foreground">{summary.ecodirect_count || 0}</dd>
               <dd className="text-xs text-muted-foreground">1 per unit + building mains</dd>
             </div>
@@ -94,12 +94,12 @@ export default function PropertyDevices() {
               <p className="mb-2">Every unit in this property is equipped with:</p>
               <ul className="list-disc list-inside space-y-1">
                 <li><strong>Shelly EM</strong> - Real-time electric monitoring at the unit breaker panel</li>
-                <li><strong>Ecodirect Water Sensor</strong> - Flow rate, pressure, and leak detection</li>
+                <li><strong>Dragino Water Sensor</strong> - Flow rate, pressure, and leak detection</li>
               </ul>
               <p className="mt-2">Building-level monitoring includes:</p>
               <ul className="list-disc list-inside space-y-1">
                 <li><strong>Shelly Pro 3EM</strong> - 3-phase electric monitoring on main panels</li>
-                <li><strong>Ecodirect Main Line Sensors</strong> - Building water supply monitoring</li>
+                <li><strong>Dragino Main Line Sensors</strong> - Building water supply monitoring</li>
               </ul>
             </div>
           </div>
@@ -137,7 +137,7 @@ export default function PropertyDevices() {
                             <h5 className="font-semibold text-sm text-foreground">{device.name}</h5>
                             <p className="text-xs text-muted-foreground">{device.location}</p>
                             <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-primary/10 text-primary mt-1">
-                              {device.type === 'shelly_pro_3em' ? 'Shelly Pro 3EM' : 'Ecodirect Main'}
+                              {device.type === 'shelly_pro_3em' ? 'Shelly Pro 3EM' : 'Dragino Main'}
                             </span>
                           </div>
                           <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${

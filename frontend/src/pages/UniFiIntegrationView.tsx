@@ -395,7 +395,7 @@ export default function UniFiIntegrationView() {
                 <li>Occupancy tracking via motion sensors and cameras for vacancy verification</li>
                 <li>HVAC efficiency monitoring with temperature sensors and door/window contacts</li>
                 <li>Smart alerts combining UniFi events with utility anomalies</li>
-                <li>Automatic shutoff integration with Moen Flo when leaks detected</li>
+                <li>Access control event logging and denied-entry alerting</li>
               </ul>
             </div>
           </div>

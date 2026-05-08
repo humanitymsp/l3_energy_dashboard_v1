@@ -80,7 +80,7 @@ export default function BuildingView() {
   const building = buildingData;
   const devices = devicesData?.devices?.filter((d: any) => d.building_id === buildingId) || [];
   const shellyDevices = devices.filter((d: any) => d.type.startsWith('shelly'));
-  const ecodirectDevices = devices.filter((d: any) => d.type.startsWith('ecodirect'));
+  const draginoDevices = devices.filter((d: any) => d.type.startsWith('ecodirect'));
   const buildingMainDevices = devices.filter((d: any) => !d.unit_id);
   const unitDevices = devices.filter((d: any) => d.unit_id);
 
@@ -171,7 +171,7 @@ export default function BuildingView() {
             <div>
               <dt className="text-sm font-medium text-muted-foreground">Monitoring Devices</dt>
               <dd className="text-2xl font-semibold text-foreground">{devices.length}</dd>
-              <dd className="text-xs text-muted-foreground">{shellyDevices.length} Shelly + {ecodirectDevices.length} Ecodirect</dd>
+              <dd className="text-xs text-muted-foreground">{shellyDevices.length} Shelly + {draginoDevices.length} Dragino</dd>
             </div>
           </div>
         </div>
@@ -194,7 +194,7 @@ export default function BuildingView() {
                     <h3 className="font-semibold text-sm text-foreground">{device.name}</h3>
                     <p className="text-xs text-muted-foreground mt-1">{device.location}</p>
                     <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-primary/10 text-primary mt-2">
-                      {device.type === 'shelly_pro_3em' ? 'Shelly Pro 3EM' : 'Ecodirect Main'}
+                      {device.type === 'shelly_pro_3em' ? 'Shelly Pro 3EM' : 'Dragino Main'}
                     </span>
                   </div>
                   <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${

@@ -10,9 +10,8 @@ import UniFiIntegrationView from './pages/UniFiIntegrationView';
 import DeviceMonitoring from './pages/DeviceMonitoring';
 import MonitoringDashboard from './pages/MonitoringDashboard';
 import SecurityMonitoring from './pages/SecurityMonitoring';
-import PredictiveAnalytics from './pages/PredictiveAnalytics';
-import LaundryManagement from './pages/LaundryManagement';
-import LaundryDashboard from './pages/LaundryDashboard';
+import LaundryMonitoring from './pages/LaundryMonitoring';
+import AdminManagement from './pages/AdminManagement';
 
 // Mock user for public access
 const mockUser = {
@@ -37,9 +36,8 @@ function App() {
           <Route path="/integrations/unifi" element={<UniFiIntegrationView />} />
           <Route path="/monitoring" element={<MonitoringDashboard />} />
           <Route path="/monitoring/security" element={<SecurityMonitoring />} />
-          <Route path="/analytics" element={<PredictiveAnalytics />} />
-          <Route path="/laundry" element={<LaundryManagement />} />
-          <Route path="/laundry/dashboard" element={<LaundryDashboard />} />
+          <Route path="/laundry" element={<LaundryMonitoring />} />
+          <Route path="/admin" element={<AdminManagement />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Layout>

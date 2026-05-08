@@ -52,7 +52,7 @@ export default function IntegrationsView() {
       status: 'connected',
       lastSync: '15 seconds ago',
       icon: Activity,
-      description: 'Shelly EM (single-phase, CT clamp, per-unit breaker panel) and Shelly Pro 3EM (three-phase, building main panel) devices. Gen2 firmware uses MQTT with RPC-over-MQTT protocol. Devices publish NotifyStatus and NotifyEvent payloads containing instantaneous power (W), voltage (V), current (A), power factor, and cumulative energy (Wh). Each device connects to the MQTT broker over WiFi with configurable topic prefix.',
+      description: 'Shelly EM (single-phase, CT clamp, per-unit breaker panel), Shelly Pro 3EM (three-phase, building main panel), and Shelly Plus Uni (dry contact pulse counter for laundry machines). Gen2 firmware uses MQTT with RPC-over-MQTT protocol. Devices publish NotifyStatus and NotifyEvent payloads containing instantaneous power (W), voltage (V), current (A), power factor, cumulative energy (Wh), and pulse counter values. Each device connects to the MQTT broker over WiFi with configurable topic prefix.',
       connectionMethod: 'Gen2 MQTT RPC Protocol — Each Shelly device connects to MQTT broker as a client. Publishes: {topic_prefix}/events/rpc (NotifyStatus, NotifyEvent), {topic_prefix}/status/em:0 (full EM component state on significant change). Subscribe to {topic_prefix}/rpc to send commands. QoS 1 guaranteed delivery. Device firmware handles reconnection. Documented at shelly-api-docs.shelly.cloud/gen2.',
       apiConfig: [
         { label: 'MQTT Broker', value: 'mqtt://192.168.1.10:1883' },

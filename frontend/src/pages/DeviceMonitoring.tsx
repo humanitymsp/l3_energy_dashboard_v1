@@ -23,7 +23,7 @@ export default function DeviceMonitoring() {
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold text-foreground">Device Monitoring</h1>
-        <p className="text-muted-foreground mt-1">Real-time monitoring of Shelly and Ecodirect sensors</p>
+        <p className="text-muted-foreground mt-1">Real-time monitoring of Shelly and Dragino sensors</p>
       </div>
 
       {/* Summary Cards */}
@@ -42,7 +42,7 @@ export default function DeviceMonitoring() {
           <div className="flex items-center">
             <Droplet className="h-6 w-6 text-primary mr-3" />
             <div>
-              <dt className="text-sm font-medium text-muted-foreground">Ecodirect Sensors</dt>
+              <dt className="text-sm font-medium text-muted-foreground">Dragino Sensors</dt>
               <dd className="text-2xl font-semibold text-foreground">{summary.ecodirect_count || 0}</dd>
             </div>
           </div>
@@ -155,12 +155,12 @@ export default function DeviceMonitoring() {
         </div>
       </div>
 
-      {/* Ecodirect Sensors */}
+      {/* Dragino Sensors */}
       <div className="bg-card shadow rounded-lg border border-border">
         <div className="px-4 py-5 sm:p-6">
           <h2 className="text-lg font-medium text-foreground mb-4 flex items-center">
             <Droplet className="h-5 w-5 mr-2 text-primary" />
-            Ecodirect Water Sensors ({ecodirectDevices.length})
+            Dragino Water Sensors ({ecodirectDevices.length})
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {ecodirectDevices.map((device: any) => (
@@ -175,7 +175,7 @@ export default function DeviceMonitoring() {
                     <h3 className="font-semibold text-foreground text-sm">{device.name}</h3>
                     <p className="text-xs text-muted-foreground mt-1">{device.location}</p>
                     <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-primary/10 text-primary mt-2">
-                      Ecodirect Water
+                      Dragino Water
                     </span>
                   </div>
                   <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
@@ -239,11 +239,11 @@ export default function DeviceMonitoring() {
           <div className="ml-3">
             <h3 className="text-sm font-medium text-foreground">Real-Time Monitoring Active</h3>
             <div className="mt-2 text-sm text-muted-foreground">
-              <p>All Shelly and Ecodirect devices are reporting in real-time. Data refreshes every 5 seconds.</p>
+              <p>All Shelly and Dragino devices are reporting in real-time. Data refreshes every 5 seconds.</p>
               <ul className="list-disc list-inside mt-2 space-y-1">
                 <li>Shelly Pro 3EM: 3-phase electric monitoring with power factor analysis</li>
                 <li>Shelly EM: Single-phase electric monitoring for individual units</li>
-                <li>Ecodirect Water: Flow rate, pressure, and temperature monitoring</li>
+                <li>Dragino Water: Flow rate, pressure, and temperature monitoring</li>
               </ul>
             </div>
           </div>
