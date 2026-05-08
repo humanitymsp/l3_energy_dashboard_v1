@@ -169,6 +169,14 @@
     animation: slideIn 0.3s ease-out;
   }
   
+  /* Elements with animation-delay should start invisible */
+  .animate-slide-up-sm,
+  .animate-slide-up,
+  .animate-fade-in {
+    opacity: 0;
+    animation-fill-mode: forwards;
+  }
+
   /* Better mobile input focus */
   input, textarea, select {
     font-size: 16px; /* Prevents zoom on iOS */
