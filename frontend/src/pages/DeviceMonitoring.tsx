@@ -1,20 +1,31 @@
-import { useQuery } from '@tanstack/react-query';
 import { Zap, Droplet, Activity, AlertTriangle, CheckCircle, TrendingUp } from 'lucide-react';
-import { api } from '../lib/api.local';
+
+const mockDevices = [
+  { id: 'shelly-main-001', property_id: 'prop-001', building_id: 'bldg-001', type: 'shelly_pro_3em', name: 'Sunset Apartments - Building A Main Panel', location: 'Electrical Room', status: 'online', current_power_kw: 28.4, voltage_l1: 120.2, voltage_l2: 119.8, voltage_l3: 120.5, power_factor: 0.92, total_kwh_today: 356.8 },
+  { id: 'shelly-main-002', property_id: 'prop-001', building_id: 'bldg-002', type: 'shelly_pro_3em', name: 'Sunset Apartments - Building B Main Panel', location: 'Electrical Room', status: 'online', current_power_kw: 32.2, voltage_l1: 119.9, voltage_l2: 120.3, voltage_l3: 120.1, power_factor: 0.89, total_kwh_today: 398.3 },
+  { id: 'shelly-main-003', property_id: 'prop-002', building_id: 'bldg-003', type: 'shelly_pro_3em', name: 'Riverside Complex - Building C Main Panel', location: 'Electrical Room', status: 'online', current_power_kw: 42.8, voltage_l1: 120.1, voltage_l2: 119.7, voltage_l3: 120.4, power_factor: 0.91, total_kwh_today: 512.6 },
+  { id: 'shelly-unit-101', property_id: 'prop-001', building_id: 'bldg-001', unit_id: 'unit-101', type: 'shelly_em', name: 'Unit 101 - Electric Monitor', location: 'Unit Breaker Panel', status: 'online', current_power_kw: 0.8, total_kwh_today: 12.4 },
+  { id: 'shelly-unit-102', property_id: 'prop-001', building_id: 'bldg-001', unit_id: 'unit-102', type: 'shelly_em', name: 'Unit 102 - Electric Monitor', location: 'Unit Breaker Panel', status: 'online', current_power_kw: 1.2, total_kwh_today: 15.8 },
+  { id: 'shelly-unit-103', property_id: 'prop-001', building_id: 'bldg-001', unit_id: 'unit-103', type: 'shelly_em', name: 'Unit 103 - Electric Monitor', location: 'Unit Breaker Panel', status: 'online', current_power_kw: 2.1, total_kwh_today: 18.2, alert: 'Usage 45% above baseline for 3 consecutive days' },
+  { id: 'shelly-unit-205', property_id: 'prop-001', building_id: 'bldg-001', unit_id: 'unit-205', type: 'shelly_em', name: 'Unit 205 - Electric Monitor', location: 'Unit Breaker Panel', status: 'online', current_power_kw: 4.2, total_kwh_today: 28.9, alert: 'Peak usage at 2-4 AM - possible unauthorized equipment' },
+  { id: 'eco-main-001', property_id: 'prop-001', building_id: 'bldg-001', type: 'ecodirect_water', name: 'Building A - Main Water Line', location: 'Mechanical Room', status: 'online', current_flow_gpm: 4.2, total_gallons_today: 1850, pressure_psi: 62, temperature_f: 55 },
+  { id: 'eco-main-002', property_id: 'prop-001', building_id: 'bldg-002', type: 'ecodirect_water', name: 'Building B - Main Water Line', location: 'Mechanical Room', status: 'online', current_flow_gpm: 3.8, total_gallons_today: 1720, pressure_psi: 60, temperature_f: 54 },
+  { id: 'eco-unit-101', property_id: 'prop-001', building_id: 'bldg-001', unit_id: 'unit-101', type: 'ecodirect_water', name: 'Unit 101 - Water Monitor', location: 'Unit Water Closet', status: 'online', current_flow_gpm: 2.1, total_gallons_today: 450, pressure_psi: 58, alert: 'Flow spike 320% - possible leak in vacant unit' },
+  { id: 'eco-unit-304', property_id: 'prop-002', building_id: 'bldg-003', unit_id: 'unit-304', type: 'ecodirect_water', name: 'Unit 304 - Water Monitor', location: 'Unit Water Closet', status: 'online', current_flow_gpm: 0.3, total_gallons_today: 324, pressure_psi: 59, alert: 'Continuous flow detected - possible running toilet' },
+  { id: 'eco-irrigation-001', property_id: 'prop-002', building_id: 'bldg-003', type: 'ecodirect_water', name: 'Riverside Complex - Irrigation System', location: 'Irrigation Control Room', status: 'online', current_flow_gpm: 12.8, total_gallons_today: 2840, pressure_psi: 65, alert: 'Usage 180% above baseline - possible broken sprinkler' },
+];
 
 export default function DeviceMonitoring() {
-  const { data: devicesData, isLoading } = useQuery({
-    queryKey: ['devices'],
-    queryFn: () => fetch('http://localhost:4000/api/devices').then(res => res.json()),
-    refetchInterval: 5000, // Refresh every 5 seconds for real-time monitoring
-  });
-
-  if (isLoading) {
-    return <div className="flex items-center justify-center h-64">Loading device monitoring...</div>;
-  }
-
-  const devices = devicesData?.devices || [];
-  const summary = devicesData?.summary || {};
+  const devices = mockDevices;
+  const shellyDevicesList = devices.filter(d => d.type.startsWith('shelly'));
+  const ecodirectDevicesList = devices.filter(d => d.type.startsWith('ecodirect'));
+  const summary = {
+    total: devices.length,
+    shelly_count: shellyDevicesList.length,
+    ecodirect_count: ecodirectDevicesList.length,
+    online: devices.filter(d => d.status === 'online').length,
+    with_alerts: devices.filter(d => (d as any).alert).length,
+  };
 
   const shellyDevices = devices.filter((d: any) => d.type.startsWith('shelly'));
   const ecodirectDevices = devices.filter((d: any) => d.type.startsWith('ecodirect'));
