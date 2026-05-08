@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Activity, Wifi, Shield, ExternalLink, Server, Radio, Cloud, ChevronDown, ChevronUp, Key, Globe, RefreshCw, Settings, CheckCircle2 } from 'lucide-react';
+import { Activity, Wifi, Shield, ExternalLink, Radio, Cloud, ChevronDown, ChevronUp, Key, Globe, RefreshCw, Settings, CheckCircle2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 interface Integration {
@@ -28,21 +28,22 @@ export default function IntegrationsView() {
       detailsPath: '/integrations/unifi',
       featured: true,
       icon: Shield,
-      description: 'Connects to the UniFi OS Console running Protect (NVR/cameras) and sensor devices (leak, contact, motion, temperature). Uses the reverse-engineered Protect REST API with WebSocket event streaming for real-time alerts. The unifi-protect npm library provides TypeScript bindings. Bootstrap endpoint returns full system state; WebSocket delivers binary-framed event packets for motion, doorbell, and sensor triggers.',
-      connectionMethod: 'REST + WebSocket (Local Network) — Cookie-based session auth with CSRF token via POST /api/auth/login on UniFi OS Console. After login, GET /proxy/protect/api/bootstrap retrieves full device state. WebSocket at wss://{host}/proxy/protect/ws/updates streams real-time events using a binary header+payload protocol.',
+      description: 'Connects to UniFi OS Console running Protect (NVR/cameras) and smart sensors (leak, door/window contact, motion, temperature/humidity). Uses the unifi-protect npm library — the most mature open-source implementation of the Protect API, actively maintained and used by thousands via homebridge-unifi-protect. Auth is cookie-based session via local admin credentials (exempt from Ubiquiti MFA requirements). WebSocket provides real-time binary-encoded event stream.',
+      connectionMethod: 'Local Admin Auth + WebSocket — POST /api/auth/login with local admin credentials returns session cookie. GET /proxy/protect/api/bootstrap returns full system state (all cameras, sensors, NVR config). WebSocket at wss://{host}/proxy/protect/ws/updates?lastUpdateId={id} streams binary-framed event packets (motion, ring, leak, contact state changes). Library: unifi-protect (npm). Requires direct network access to UniFi OS Console.',
       apiConfig: [
-        { label: 'Controller URL', value: 'https://192.168.1.1' },
-        { label: 'Username', value: 'protect_svc' },
-        { label: 'Password', value: '••••••••••••', masked: true },
-        { label: 'Bootstrap Endpoint', value: '/proxy/protect/api/bootstrap' },
-        { label: 'WebSocket URL', value: 'wss://192.168.1.1/proxy/protect/ws/updates' },
+        { label: 'Console Address', value: 'https://192.168.1.1' },
+        { label: 'Local Admin User', value: 'protect_readonly' },
+        { label: 'Local Admin Password', value: '••••••••••••', masked: true },
+        { label: 'Auth Endpoint', value: 'POST /api/auth/login' },
+        { label: 'Bootstrap', value: 'GET /proxy/protect/api/bootstrap' },
+        { label: 'Events WebSocket', value: 'wss://.../proxy/protect/ws/updates' },
       ],
       settings: [
-        { label: 'Enable Motion Events', value: 'Enabled', type: 'toggle' },
-        { label: 'Enable Leak Alerts', value: 'Enabled', type: 'toggle' },
-        { label: 'WebSocket Reconnect', value: 'Auto (5s backoff)', type: 'text' },
-        { label: 'Event Correlation Window', value: '60s', type: 'text' },
-        { label: 'Camera Snapshot Retention', value: '7 days', type: 'select' },
+        { label: 'Motion Event Subscription', value: 'Enabled', type: 'toggle' },
+        { label: 'Leak Sensor Alerts', value: 'Enabled', type: 'toggle' },
+        { label: 'Contact Sensor (Door/Window)', value: 'Enabled', type: 'toggle' },
+        { label: 'WebSocket Auto-Reconnect', value: 'Enabled (5s exp. backoff)', type: 'text' },
+        { label: 'Bootstrap Refresh Interval', value: '5 min', type: 'text' },
       ],
     },
     {
@@ -51,70 +52,69 @@ export default function IntegrationsView() {
       status: 'connected',
       lastSync: '15 seconds ago',
       icon: Activity,
-      description: 'Shelly EM (single-phase, per-unit) and Pro 3EM (three-phase, building main panel) devices report real-time energy consumption via Gen2 MQTT RPC protocol. Devices publish RPC notifications (NotifyStatus events) containing instantaneous power (W), voltage (V), current (A), power factor, and cumulative energy (kWh). Status updates publish to {device_id}/status/em:0 with full electrical readings.',
-      connectionMethod: 'MQTT Gen2 RPC — Devices connect directly to MQTT broker. RPC notifications publish to {device_id}/events/rpc (QoS 1). Component status publishes to {device_id}/status/em:0 on significant change. Commands sent via {device_id}/rpc request topic. Supports mTLS with client certificates.',
+      description: 'Shelly EM (single-phase, CT clamp, per-unit breaker panel) and Shelly Pro 3EM (three-phase, building main panel) devices. Gen2 firmware uses MQTT with RPC-over-MQTT protocol. Devices publish NotifyStatus and NotifyEvent payloads containing instantaneous power (W), voltage (V), current (A), power factor, and cumulative energy (Wh). Each device connects to the MQTT broker over WiFi with configurable topic prefix.',
+      connectionMethod: 'Gen2 MQTT RPC Protocol — Each Shelly device connects to MQTT broker as a client. Publishes: {topic_prefix}/events/rpc (NotifyStatus, NotifyEvent), {topic_prefix}/status/em:0 (full EM component state on significant change). Subscribe to {topic_prefix}/rpc to send commands. QoS 1 guaranteed delivery. Device firmware handles reconnection. Documented at shelly-api-docs.shelly.cloud/gen2.',
       apiConfig: [
-        { label: 'MQTT Broker', value: 'mqtt://broker.local:1883' },
-        { label: 'RPC Topic Pattern', value: '{device_id}/events/rpc' },
-        { label: 'Status Topic Pattern', value: '{device_id}/status/em:0' },
-        { label: 'Auth User', value: 'shelly_svc' },
-        { label: 'Auth Password', value: '••••••••', masked: true },
-        { label: 'QoS Level', value: '1' },
+        { label: 'MQTT Broker', value: 'mqtt://192.168.1.10:1883' },
+        { label: 'Notification Topic', value: '{topic_prefix}/events/rpc' },
+        { label: 'Status Topic', value: '{topic_prefix}/status/em:0' },
+        { label: 'Command Topic', value: '{topic_prefix}/rpc' },
+        { label: 'Broker Username', value: 'shelly_svc' },
+        { label: 'Broker Password', value: '••••••••', masked: true },
       ],
       settings: [
-        { label: 'Status Notifications (status_ntf)', value: 'Enabled', type: 'toggle' },
-        { label: 'RPC Notifications (rpc_ntf)', value: 'Enabled', type: 'toggle' },
-        { label: 'Power Threshold Alert', value: '500W', type: 'text' },
-        { label: 'mTLS Client Certs', value: 'Disabled', type: 'toggle' },
-        { label: 'Auto-Discovery', value: 'Enabled', type: 'toggle' },
+        { label: 'status_ntf (publish full status)', value: 'Enabled', type: 'toggle' },
+        { label: 'rpc_ntf (publish RPC events)', value: 'Enabled', type: 'toggle' },
+        { label: 'QoS Level', value: '1', type: 'text' },
+        { label: 'High Power Alert Threshold', value: '500W', type: 'text' },
+        { label: 'Firmware Auto-Update', value: 'Disabled', type: 'toggle' },
       ],
     },
     {
       id: 'water-sensors',
-      name: 'LoRaWAN Water Flow Sensors',
+      name: 'Dragino LoRaWAN Water Sensors',
       status: 'connected',
       lastSync: '45 seconds ago',
       icon: Activity,
-      description: 'Dragino SW3L outdoor flow sensors and FM100 inline meters measure water consumption per unit and at building mains. Sensors transmit via LoRaWAN to a local Dragino LPS8N gateway running ChirpStack MQTT Forwarder. ChirpStack Network Server decodes payloads and publishes decoded JSON to MQTT. Battery-powered with 5+ year life. Leak detection inferred from continuous flow analysis.',
-      connectionMethod: 'LoRaWAN → ChirpStack → MQTT — Sensors transmit at configurable intervals (default 10min, alarm on continuous flow). Dragino gateway forwards packets to ChirpStack v4 via MQTT Forwarder. ChirpStack decodes LoRaWAN frames, runs JavaScript codec, and publishes to application/{app_id}/device/{dev_eui}/event/up.',
+      description: 'Dragino SW3L (pipe-mount pulse counter) and S31-LB (inline flow) sensors measure water consumption. Communicate via LoRaWAN Class A to a Dragino LPS8N gateway on-site. Gateway runs ChirpStack Concentratord + MQTT Forwarder. ChirpStack v4 Network Server handles join, decryption, and payload decoding via JavaScript codec. Decoded JSON published to MQTT. Battery-powered sensors last 5+ years on 2x AA.',
+      connectionMethod: 'LoRaWAN → ChirpStack v4 → MQTT — Sensor uplinks arrive at gateway via LoRa radio (US915 band). ChirpStack MQTT Forwarder on gateway publishes raw frames to ChirpStack NS. NS handles OTAA join, frame decryption, deduplication, and runs device codec (JavaScript). Decoded payload published to: application/{APPLICATION_ID}/device/{DEV_EUI}/event/up. Topic structure per ChirpStack v4 docs.',
       apiConfig: [
-        { label: 'ChirpStack Server', value: 'http://192.168.1.50:8080' },
-        { label: 'MQTT Topic', value: 'application/1/device/+/event/up' },
-        { label: 'Gateway EUI', value: 'A840411EDC284E50' },
-        { label: 'Network Key', value: '••••••••••••••••', masked: true },
-        { label: 'App Key', value: '••••••••••••••••', masked: true },
+        { label: 'ChirpStack URL', value: 'http://192.168.1.10:8080' },
+        { label: 'MQTT Event Topic', value: 'application/{app_id}/device/+/event/up' },
+        { label: 'LoRaWAN Band', value: 'US915' },
+        { label: 'Join Type', value: 'OTAA' },
+        { label: 'App Key', value: '••••••••••••••••••••••••••••••••', masked: true },
       ],
       settings: [
-        { label: 'Uplink Interval', value: '10 min', type: 'text' },
-        { label: 'Continuous Flow Alert', value: '> 0.1 GPM for 30 min', type: 'text' },
-        { label: 'Gallons Alert Threshold', value: '50 gal/hr', type: 'text' },
-        { label: 'Battery Low Alert (< 3.0V)', value: 'Enabled', type: 'toggle' },
-        { label: 'Codec Function', value: 'dragino_sw3l_decoder.js', type: 'text' },
+        { label: 'Uplink Interval', value: '10 min (configurable via downlink)', type: 'text' },
+        { label: 'Alarm: Continuous Flow', value: '> 0.1 GPM for 30 min', type: 'text' },
+        { label: 'High Volume Alert', value: '> 50 gal/hr', type: 'text' },
+        { label: 'Low Battery Alert (< 2.8V)', value: 'Enabled', type: 'toggle' },
+        { label: 'Decoder Codec', value: 'dragino_sw3l_v1.js', type: 'text' },
       ],
     },
     {
       id: 'mqtt',
-      name: 'Eclipse Mosquitto MQTT Broker',
+      name: 'Eclipse Mosquitto Broker',
       status: 'connected',
       lastSync: '5 seconds ago',
       icon: Radio,
-      description: 'Central Eclipse Mosquitto v2 message broker that routes all IoT device telemetry. Shelly devices, ChirpStack (water sensors), and Home Assistant all publish here. The Node.js backend maintains persistent subscriptions and writes time-series data to PostgreSQL/TimescaleDB. Supports MQTT v5 shared subscriptions for horizontal scaling of backend workers.',
-      connectionMethod: 'MQTT v5 over TCP (1883) and TLS (8883) — Backend uses persistent sessions with QoS 1 subscriptions. WebSocket port (9001) available for browser-based debugging. ACL file restricts per-client topic access.',
+      description: 'Eclipse Mosquitto v2 is the central MQTT message broker. All device telemetry routes through here: Shelly devices connect as MQTT clients, ChirpStack publishes decoded LoRaWAN payloads, and the Node.js backend subscribes to process and store data. Runs as a Docker container in the local stack. Configured with username/password auth and per-client ACL for topic isolation.',
+      connectionMethod: 'MQTT v5 over TCP (port 1883) and TLS (port 8883) — Backend connects with persistent session (Clean Start = false) so messages queue during brief disconnects. QoS 1 subscriptions ensure at-least-once delivery. WebSocket on port 9001 for browser-based MQTT debugging tools. ACL file restricts which clients can publish/subscribe to which topics.',
       apiConfig: [
-        { label: 'Broker Address', value: 'mqtt://localhost:1883' },
-        { label: 'TLS Port', value: '8883' },
-        { label: 'WebSocket Port', value: '9001' },
-        { label: 'Client ID', value: 'energy-dash-backend-01' },
+        { label: 'TCP Address', value: 'mqtt://192.168.1.10:1883' },
+        { label: 'TLS Address', value: 'mqtts://192.168.1.10:8883' },
+        { label: 'WebSocket', value: 'ws://192.168.1.10:9001' },
+        { label: 'Backend Client ID', value: 'energy-dash-backend-01' },
         { label: 'Username', value: 'backend_svc' },
         { label: 'Password', value: '••••••••', masked: true },
-        { label: 'ACL File', value: '/mosquitto/config/acl.conf' },
       ],
       settings: [
         { label: 'Protocol Version', value: 'MQTT v5', type: 'text' },
-        { label: 'Max Reconnect Attempts', value: '∞ (exponential backoff)', type: 'text' },
-        { label: 'Keep Alive Interval', value: '60s', type: 'text' },
-        { label: 'Clean Start', value: 'Disabled', type: 'toggle' },
-        { label: 'Message Expiry', value: '24 hours', type: 'select' },
+        { label: 'Persistent Session', value: 'Enabled', type: 'toggle' },
+        { label: 'Keep Alive', value: '60s', type: 'text' },
+        { label: 'ACL Enforcement', value: 'Enabled', type: 'toggle' },
+        { label: 'Message Expiry Interval', value: '86400s (24h)', type: 'text' },
       ],
     },
     {
@@ -123,46 +123,21 @@ export default function IntegrationsView() {
       status: 'connected',
       lastSync: 'Just now',
       icon: Cloud,
-      description: 'Cloud-side ingestion for device telemetry. Local Mosquitto broker bridges selected topics to AWS IoT Core via MQTT bridge. IoT Rules route messages to Kinesis Data Firehose (→ S3 for archival), Lambda (anomaly detection), and SNS (push alerts). Device Shadows maintain last-known state for offline reconciliation. Fleet Indexing enables cross-device queries.',
-      connectionMethod: 'MQTT Bridge over TLS (Port 8883) — Mosquitto bridge config authenticates via X.509 device certificate. Only selected topics are forwarded (e.g., shelly/+/status/em:0, application/+/device/+/event/up). IoT Rules engine processes with SQL-like syntax.',
+      description: 'Cloud telemetry archival and alerting. Mosquitto is configured as an MQTT bridge to forward selected topics to AWS IoT Core. IoT Rules (SQL-based) route messages to: Kinesis Data Firehose → S3 (long-term storage), Lambda (anomaly detection), and SNS (email/SMS push alerts). Device Shadows store last-known device state for reconciliation after outages.',
+      connectionMethod: 'Mosquitto MQTT Bridge → AWS IoT Core (TLS port 8883) — Bridge authenticates with X.509 device certificate provisioned via AWS IoT. Only specific topic patterns are forwarded (configured in mosquitto.conf bridge section). IoT Core receives messages and applies Rules Engine with SQL-like WHERE clauses to fan out to AWS services.',
       apiConfig: [
-        { label: 'Endpoint', value: 'a1b2c3d4e5-ats.iot.us-west-2.amazonaws.com' },
+        { label: 'IoT Endpoint', value: 'a1b2c3d4e5-ats.iot.us-west-2.amazonaws.com' },
         { label: 'Region', value: 'us-west-2' },
-        { label: 'Thing Group', value: 'energy-dash-devices' },
-        { label: 'Certificate ARN', value: 'arn:aws:iot:us-west-2:••••:cert/abc123', masked: true },
-        { label: 'Bridge Topic Filter', value: 'shelly/+/status/#, application/+/device/+/event/up' },
-        { label: 'IoT Policy', value: 'EnergyDashBridgePolicy' },
+        { label: 'Auth Method', value: 'X.509 Device Certificate' },
+        { label: 'Certificate ARN', value: 'arn:aws:iot:us-west-2:••••:cert/...', masked: true },
+        { label: 'Bridge Topics', value: 'shelly/+/status/#, application/+/device/+/event/up' },
       ],
       settings: [
+        { label: 'Rule: Firehose → S3 Archival', value: 'Enabled', type: 'toggle' },
+        { label: 'Rule: Lambda Anomaly Detection', value: 'Enabled', type: 'toggle' },
+        { label: 'Rule: SNS Push Alerts', value: 'Enabled', type: 'toggle' },
         { label: 'Device Shadow Sync', value: 'Enabled', type: 'toggle' },
-        { label: 'Rule: Firehose → S3', value: 'Active', type: 'toggle' },
-        { label: 'Rule: Lambda Anomaly', value: 'Active', type: 'toggle' },
-        { label: 'Rule: SNS Alerts', value: 'Active', type: 'toggle' },
-        { label: 'S3 Retention', value: '90 days', type: 'select' },
-        { label: 'Fleet Indexing', value: 'Enabled', type: 'toggle' },
-      ],
-    },
-    {
-      id: 'speed-queen',
-      name: 'Speed Queen Insights',
-      status: 'connected',
-      lastSync: '5 minutes ago',
-      icon: Server,
-      description: 'Speed Queen Insights cloud platform provides laundry machine telemetry, revenue data, and maintenance alerts for multi-housing laundry rooms. Connected machines report cycle counts, revenue per machine, error codes, and availability status. Data is pulled via the Insights web portal API using session-based authentication.',
-      connectionMethod: 'HTTPS REST API (Cloud) — Session-based auth to Speed Queen Insights portal (insights.speedqueen.com). Polling at 5-minute intervals retrieves machine status, daily revenue reports, and maintenance alerts. No official public API — uses authenticated portal endpoints.',
-      apiConfig: [
-        { label: 'Portal URL', value: 'https://insights.speedqueen.com' },
-        { label: 'Account Email', value: 'ops@sabincdc.org' },
-        { label: 'Password', value: '••••••••••••', masked: true },
-        { label: 'Location ID', value: 'LOC-••••', masked: true },
-        { label: 'Poll Interval', value: '5 min' },
-      ],
-      settings: [
-        { label: 'Revenue Sync', value: 'Enabled', type: 'toggle' },
-        { label: 'Machine Status Alerts', value: 'Enabled', type: 'toggle' },
-        { label: 'Error Code Forwarding', value: 'Enabled', type: 'toggle' },
-        { label: 'Daily Revenue Report', value: '6:00 AM', type: 'text' },
-        { label: 'Out-of-Service Alert', value: '> 2 hours', type: 'text' },
+        { label: 'S3 Data Retention', value: '90 days', type: 'select' },
       ],
     },
   ];
@@ -334,24 +309,20 @@ export default function IntegrationsView() {
         <h3 className="text-sm font-semibold text-foreground mb-3 uppercase tracking-wider">System Architecture</h3>
         <div className="text-sm text-muted-foreground space-y-3">
           <div>
-            <span className="font-medium text-foreground">Electric Monitoring (Shelly → MQTT → Backend)</span>
-            <p className="mt-1">Shelly Gen2 devices (EM per unit, Pro 3EM per building panel) connect to the Mosquitto broker over WiFi. They publish RPC notifications and status updates containing real-time power, voltage, and energy readings. The Node.js backend subscribes to these topics and writes to PostgreSQL/TimescaleDB.</p>
+            <span className="font-medium text-foreground">Electric Monitoring (Shelly → MQTT → Backend → PostgreSQL)</span>
+            <p className="mt-1">Shelly Gen2 devices (EM per unit, Pro 3EM per building panel) connect to the Mosquitto broker over WiFi using the Gen2 RPC-over-MQTT protocol. They publish NotifyStatus events with power, voltage, and energy data. The Node.js backend subscribes to these topics and writes time-series data to PostgreSQL with TimescaleDB extension for efficient range queries.</p>
           </div>
           <div>
-            <span className="font-medium text-foreground">Water Monitoring (Dragino → LoRaWAN → ChirpStack → MQTT → Backend)</span>
-            <p className="mt-1">Battery-powered Dragino flow sensors transmit via LoRa radio to a local LPS8N gateway. The gateway runs ChirpStack MQTT Forwarder, which passes packets to ChirpStack Network Server for LoRaWAN decoding. Decoded payloads (flow rate, total volume) are published to MQTT and consumed by the backend.</p>
+            <span className="font-medium text-foreground">Water Monitoring (Dragino → LoRa → Gateway → ChirpStack → MQTT → Backend)</span>
+            <p className="mt-1">Battery-powered Dragino flow sensors transmit via LoRa radio (US915) to a local LPS8N gateway. The gateway runs ChirpStack MQTT Forwarder, forwarding raw LoRaWAN frames to ChirpStack v4 Network Server. ChirpStack handles OTAA join, decryption, deduplication, and applies a JavaScript codec to decode binary payloads into JSON (flow rate, total volume, battery voltage). Decoded data is published to MQTT and consumed by the backend.</p>
           </div>
           <div>
-            <span className="font-medium text-foreground">Security & Sensors (UniFi Protect → REST/WebSocket → Backend)</span>
-            <p className="mt-1">The backend authenticates with the UniFi OS Console via cookie-based session, fetches bootstrap state, then maintains a WebSocket connection for real-time events (motion, leak, contact, temperature). Events are correlated with utility data for smart alerts (e.g., leak sensor + water spike = confirmed leak).</p>
+            <span className="font-medium text-foreground">Security & Sensors (UniFi Protect → Local REST + WebSocket → Backend)</span>
+            <p className="mt-1">The backend uses the unifi-protect npm library to authenticate with the UniFi OS Console via local admin credentials (cookie-based session). It fetches the bootstrap (full system state), then maintains a persistent WebSocket connection receiving binary-encoded real-time events (motion, leak detection, door contact changes). Events are correlated with utility data for smart alerts (e.g., leak sensor trigger + water flow spike = confirmed leak).</p>
           </div>
           <div>
-            <span className="font-medium text-foreground">Laundry Revenue (Speed Queen Insights → HTTPS → Backend)</span>
-            <p className="mt-1">Backend polls the Speed Queen Insights portal at 5-minute intervals for machine status and revenue data. Daily revenue reports and maintenance alerts are synced into the dashboard database.</p>
-          </div>
-          <div>
-            <span className="font-medium text-foreground">Cloud Sync & Alerting (Mosquitto Bridge → AWS IoT Core)</span>
-            <p className="mt-1">Mosquitto bridges selected MQTT topics to AWS IoT Core over TLS with X.509 cert auth. IoT Rules route to Kinesis Firehose (S3 archival), Lambda (anomaly detection), and SNS (push notifications via email/SMS). Device Shadows maintain last-known state for offline devices.</p>
+            <span className="font-medium text-foreground">Cloud Archival & Alerting (Mosquitto Bridge → AWS IoT Core → S3/Lambda/SNS)</span>
+            <p className="mt-1">Mosquitto is configured with a bridge connection to forward selected MQTT topics to AWS IoT Core over TLS (X.509 cert auth). IoT Rules Engine applies SQL-like filters to route data: Kinesis Data Firehose → S3 for long-term archival, Lambda for anomaly detection, and SNS for push notifications (email/SMS). Device Shadows maintain last-known state for offline reconciliation.</p>
           </div>
         </div>
       </div>
