@@ -73,7 +73,14 @@ export default function Dashboard() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <h1 className="text-3xl font-bold text-foreground">Portfolio Overview</h1>
+        <div className="flex items-center gap-4">
+          <img
+            src="/sabin-cdc-logo.jpg"
+            alt="Sabin CDC"
+            className="h-10 sm:h-12 w-auto object-contain rounded"
+          />
+          <h1 className="text-3xl font-bold text-foreground">Portfolio Overview</h1>
+        </div>
         
         {/* Search Bar */}
         <div className="relative w-full sm:w-96">
