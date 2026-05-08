@@ -17,31 +17,31 @@ export default function SecurityMonitoring() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Physical Security</h1>
-        <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+        <h1 className="text-3xl font-bold text-foreground">Physical Security</h1>
+        <p className="mt-2 text-sm text-muted-foreground">
           UniFi Protect Cameras & Access Control
         </p>
       </div>
 
       {/* Summary Stats */}
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
+        <div className="bg-card border border-border overflow-hidden shadow rounded-lg">
           <div className="p-5">
             <div className="flex items-center">
               <div className="flex-shrink-0">
-                <Camera className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+                <Camera className="h-6 w-6 text-primary" />
               </div>
               <div className="ml-5 w-0 flex-1">
                 <dl>
-                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Cameras Online</dt>
-                  <dd className="text-3xl font-semibold text-gray-900 dark:text-white">{onlineCameras}/{cameras.length}</dd>
+                  <dt className="text-sm font-medium text-muted-foreground truncate">Cameras Online</dt>
+                  <dd className="text-3xl font-semibold text-foreground">{onlineCameras}/{cameras.length}</dd>
                 </dl>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
+        <div className="bg-card border border-border overflow-hidden shadow rounded-lg">
           <div className="p-5">
             <div className="flex items-center">
               <div className="flex-shrink-0">
@@ -49,15 +49,15 @@ export default function SecurityMonitoring() {
               </div>
               <div className="ml-5 w-0 flex-1">
                 <dl>
-                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Recording</dt>
-                  <dd className="text-3xl font-semibold text-gray-900 dark:text-white">{recordingCameras}</dd>
+                  <dt className="text-sm font-medium text-muted-foreground truncate">Recording</dt>
+                  <dd className="text-3xl font-semibold text-foreground">{recordingCameras}</dd>
                 </dl>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
+        <div className="bg-card border border-border overflow-hidden shadow rounded-lg">
           <div className="p-5">
             <div className="flex items-center">
               <div className="flex-shrink-0">
@@ -65,15 +65,15 @@ export default function SecurityMonitoring() {
               </div>
               <div className="ml-5 w-0 flex-1">
                 <dl>
-                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Access Points</dt>
-                  <dd className="text-3xl font-semibold text-gray-900 dark:text-white">{onlineAccessPoints}/{accessPoints.length}</dd>
+                  <dt className="text-sm font-medium text-muted-foreground truncate">Access Points</dt>
+                  <dd className="text-3xl font-semibold text-foreground">{onlineAccessPoints}/{accessPoints.length}</dd>
                 </dl>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
+        <div className="bg-card border border-border overflow-hidden shadow rounded-lg">
           <div className="p-5">
             <div className="flex items-center">
               <div className="flex-shrink-0">
@@ -81,8 +81,8 @@ export default function SecurityMonitoring() {
               </div>
               <div className="ml-5 w-0 flex-1">
                 <dl>
-                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Denied Access (24h)</dt>
-                  <dd className="text-3xl font-semibold text-gray-900 dark:text-white">{deniedAccess}</dd>
+                  <dt className="text-sm font-medium text-muted-foreground truncate">Denied Access (24h)</dt>
+                  <dd className="text-3xl font-semibold text-foreground">{deniedAccess}</dd>
                 </dl>
               </div>
             </div>
@@ -91,21 +91,21 @@ export default function SecurityMonitoring() {
       </div>
 
       {/* Cameras List */}
-      <div className="bg-white dark:bg-gray-800 shadow rounded-lg">
+      <div className="bg-card border border-border shadow rounded-lg">
         <div className="px-4 py-5 sm:p-6">
-          <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-4">UniFi Protect Cameras</h2>
+          <h2 className="text-lg font-medium text-foreground mb-4">UniFi Protect Cameras</h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {cameras.map((camera) => (
               <div
                 key={camera.id}
-                className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:shadow-md transition-shadow"
+                className="border border-border rounded-lg p-4 hover:shadow-md transition-shadow"
               >
                 <div className="flex items-start justify-between">
                   <div className="flex items-center space-x-3">
-                    <Camera className={`h-6 w-6 ${camera.status === 'online' ? 'text-green-600 dark:text-green-400' : 'text-gray-400'}`} />
+                    <Camera className={`h-6 w-6 ${camera.status === 'online' ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}`} />
                     <div>
-                      <h3 className="text-sm font-semibold text-gray-900 dark:text-white">{camera.name}</h3>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">{camera.model}</p>
+                      <h3 className="text-sm font-semibold text-foreground">{camera.name}</h3>
+                      <p className="text-xs text-muted-foreground">{camera.model}</p>
                     </div>
                   </div>
                   {camera.hasMotion && (
@@ -114,7 +114,7 @@ export default function SecurityMonitoring() {
                     </span>
                   )}
                 </div>
-                <div className="mt-3 space-y-1 text-xs text-gray-600 dark:text-gray-400">
+                <div className="mt-3 space-y-1 text-xs text-muted-foreground">
                   <p>{camera.location.propertyName}</p>
                   <p>{camera.location.buildingName} • {camera.location.area}</p>
                   <div className="flex items-center space-x-2 mt-2">
@@ -142,28 +142,28 @@ export default function SecurityMonitoring() {
       </div>
 
       {/* Access Control Points */}
-      <div className="bg-white dark:bg-gray-800 shadow rounded-lg">
+      <div className="bg-card border border-border shadow rounded-lg">
         <div className="px-4 py-5 sm:p-6">
-          <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-4">UniFi Access Control</h2>
+          <h2 className="text-lg font-medium text-foreground mb-4">UniFi Access Control</h2>
           <div className="space-y-3">
             {accessPoints.map((point) => (
               <div
                 key={point.id}
-                className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg"
+                className="flex items-center justify-between p-4 border border-border rounded-lg"
               >
                 <div className="flex items-center space-x-4">
-                  <Lock className={`h-6 w-6 ${point.status === 'online' ? 'text-green-600 dark:text-green-400' : 'text-gray-400'}`} />
+                  <Lock className={`h-6 w-6 ${point.status === 'online' ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}`} />
                   <div>
-                    <h3 className="text-sm font-semibold text-gray-900 dark:text-white">{point.name}</h3>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                    <h3 className="text-sm font-semibold text-foreground">{point.name}</h3>
+                    <p className="text-xs text-muted-foreground">
                       {point.location.propertyName} • {point.location.buildingName} • {point.location.floor}
                     </p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-4">
                   <div className="text-right">
-                    <p className="text-xs text-gray-500 dark:text-gray-400">24h Access Count</p>
-                    <p className="text-sm font-semibold text-gray-900 dark:text-white">{point.accessCount24h}</p>
+                    <p className="text-xs text-muted-foreground">24h Access Count</p>
+                    <p className="text-sm font-semibold text-foreground">{point.accessCount24h}</p>
                   </div>
                   <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                     point.doorState === 'closed' 
@@ -180,9 +180,9 @@ export default function SecurityMonitoring() {
       </div>
 
       {/* Recent Access Events */}
-      <div className="bg-white dark:bg-gray-800 shadow rounded-lg">
+      <div className="bg-card border border-border shadow rounded-lg">
         <div className="px-4 py-5 sm:p-6">
-          <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Recent Access Events</h2>
+          <h2 className="text-lg font-medium text-foreground mb-4">Recent Access Events</h2>
           <div className="space-y-2">
             {accessEvents.map((event) => (
               <div
@@ -190,7 +190,7 @@ export default function SecurityMonitoring() {
                 className={`flex items-center justify-between p-3 rounded-lg ${
                   event.eventType === 'denied'
                     ? 'bg-red-50 dark:bg-red-900/20'
-                    : 'bg-gray-50 dark:bg-gray-700'
+                    : 'bg-muted/50'
                 }`}
               >
                 <div className="flex items-center space-x-3">
@@ -200,10 +200,10 @@ export default function SecurityMonitoring() {
                     <XCircle className="h-5 w-5 text-red-600 dark:text-red-400" />
                   )}
                   <div>
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">
+                    <p className="text-sm font-medium text-foreground">
                       {event.user.name} • {event.accessPointName}
                     </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                    <p className="text-xs text-muted-foreground">
                       Badge: {event.user.badgeId} • {event.location.propertyName}
                     </p>
                   </div>
@@ -216,7 +216,7 @@ export default function SecurityMonitoring() {
                   }`}>
                     {event.eventType}
                   </span>
-                  <span className="text-xs text-gray-500 dark:text-gray-400">
+                  <span className="text-xs text-muted-foreground">
                     {new Date(event.timestamp).toLocaleTimeString()}
                   </span>
                 </div>

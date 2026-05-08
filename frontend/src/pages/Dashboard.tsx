@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
-import { Building2, Zap, Droplet, AlertTriangle, Home, TrendingUp, TrendingDown, Camera, Wifi, Search } from 'lucide-react';
+import { Building2, Zap, Droplet, AlertTriangle, Home, TrendingUp, TrendingDown, Camera, Wifi, Search, DollarSign, Target, Shield, Users } from 'lucide-react';
 import { api } from '../lib/api.local';
 
 export default function Dashboard() {
@@ -19,6 +19,25 @@ export default function Dashboard() {
 
   const activeAlerts = alerts.filter(a => a.status === 'active');
   const criticalAlerts = activeAlerts.filter(a => a.severity === 'critical');
+
+  // Portfolio-wide KPIs
+  const totalUnits = properties.reduce((sum, p) => sum + (p.units_count || 0), 0);
+  const occupiedUnits = properties.reduce((sum, p) => sum + (p.occupied_units || 0), 0);
+  const occupancyRate = totalUnits > 0 ? ((occupiedUnits / totalUnits) * 100).toFixed(1) : '0';
+  const totalElectricCost = properties.reduce((sum, p) => sum + (p.monthly_electric_cost || 0), 0);
+  const totalWaterCost = properties.reduce((sum, p) => sum + (p.monthly_water_cost || 0), 0);
+  const totalSavingsYTD = properties.reduce((sum, p) => sum + (p.estimated_savings_ytd || 0), 0);
+  const avgEfficiency = properties.length > 0
+    ? Math.round(properties.reduce((sum, p) => {
+        const eff = (p.water_efficiency_score && p.electric_efficiency_score)
+          ? (p.water_efficiency_score + p.electric_efficiency_score) / 2
+          : 85;
+        return sum + eff;
+      }, 0) / properties.length)
+    : 0;
+  const totalDevicesOnline = properties.reduce((sum, p) => sum + (p.devices_online || 0), 0);
+  const totalDevices = properties.reduce((sum, p) => sum + (p.devices_total || 0), 0);
+  const leaksPrevented = properties.reduce((sum, p) => sum + (p.leak_alerts_prevented || 0), 0);
 
   // Filter properties based on search query (includes property name, address, and unit count)
   const filteredProperties = properties.filter(property => {
@@ -138,6 +157,57 @@ export default function Dashboard() {
                 <dd className="text-lg font-bold text-success animate-slide-in">Operational</dd>
               </dl>
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Portfolio KPI Bar */}
+      <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
+        <div className="px-4 py-3 border-b border-border bg-muted/30">
+          <h2 className="text-sm font-semibold text-foreground uppercase tracking-wider">Portfolio Performance</h2>
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 divide-x divide-y sm:divide-y-0 divide-border">
+          <div className="p-4 text-center">
+            <div className="flex items-center justify-center mb-1">
+              <Zap className="h-4 w-4 text-yellow-500 dark:text-yellow-400 mr-1" />
+              <span className="text-xs font-medium text-muted-foreground">Electric / mo</span>
+            </div>
+            <p className="text-xl font-bold text-foreground">${totalElectricCost.toLocaleString()}</p>
+          </div>
+          <div className="p-4 text-center">
+            <div className="flex items-center justify-center mb-1">
+              <Droplet className="h-4 w-4 text-primary mr-1" />
+              <span className="text-xs font-medium text-muted-foreground">Water / mo</span>
+            </div>
+            <p className="text-xl font-bold text-foreground">${totalWaterCost.toLocaleString()}</p>
+          </div>
+          <div className="p-4 text-center">
+            <div className="flex items-center justify-center mb-1">
+              <DollarSign className="h-4 w-4 text-green-500 dark:text-green-400 mr-1" />
+              <span className="text-xs font-medium text-muted-foreground">Savings YTD</span>
+            </div>
+            <p className="text-xl font-bold text-success">${totalSavingsYTD.toLocaleString()}</p>
+          </div>
+          <div className="p-4 text-center">
+            <div className="flex items-center justify-center mb-1">
+              <Users className="h-4 w-4 text-primary mr-1" />
+              <span className="text-xs font-medium text-muted-foreground">Occupancy</span>
+            </div>
+            <p className="text-xl font-bold text-foreground">{occupancyRate}%</p>
+          </div>
+          <div className="p-4 text-center">
+            <div className="flex items-center justify-center mb-1">
+              <Target className="h-4 w-4 text-primary mr-1" />
+              <span className="text-xs font-medium text-muted-foreground">Efficiency</span>
+            </div>
+            <p className="text-xl font-bold text-foreground">{avgEfficiency}<span className="text-sm text-muted-foreground">/100</span></p>
+          </div>
+          <div className="p-4 text-center">
+            <div className="flex items-center justify-center mb-1">
+              <Shield className="h-4 w-4 text-primary mr-1" />
+              <span className="text-xs font-medium text-muted-foreground">Leaks Caught</span>
+            </div>
+            <p className="text-xl font-bold text-success">{leaksPrevented}</p>
           </div>
         </div>
       </div>

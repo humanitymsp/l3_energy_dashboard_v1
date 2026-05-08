@@ -108,16 +108,16 @@ export default function BuildingView() {
         <div>
           <Link
             to={`/properties/${building.property_id}`}
-            className="inline-flex items-center text-sm text-gray-500 hover:text-gray-700 mb-2"
+            className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-2"
           >
             <ArrowLeft className="h-4 w-4 mr-1" />
             Back to {building.property_name}
           </Link>
-          <h1 className="text-3xl font-bold text-gray-900">{building.name}</h1>
-          <p className="text-gray-500 mt-1">{building.address}</p>
+          <h1 className="text-3xl font-bold text-foreground">{building.name}</h1>
+          <p className="text-muted-foreground mt-1">{building.address}</p>
         </div>
         {building.active_alerts > 0 && (
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">
+          <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300">
             <AlertTriangle className="h-4 w-4 mr-1" />
             {building.active_alerts} Active Alerts
           </span>
@@ -126,23 +126,23 @@ export default function BuildingView() {
 
       {/* Key Metrics */}
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="bg-white overflow-hidden shadow rounded-lg p-5">
+        <div className="bg-card border border-border overflow-hidden shadow rounded-lg p-5">
           <div className="flex items-center">
-            <Home className="h-8 w-8 text-blue-600 mr-3" />
+            <Home className="h-8 w-8 text-primary mr-3" />
             <div>
-              <dt className="text-sm font-medium text-gray-500">Units</dt>
-              <dd className="text-2xl font-semibold text-gray-900">{building.occupied_units}/{building.unit_count}</dd>
-              <dd className="text-xs text-gray-500">{building.floor_count} floors</dd>
+              <dt className="text-sm font-medium text-muted-foreground">Units</dt>
+              <dd className="text-2xl font-semibold text-foreground">{building.occupied_units}/{building.unit_count}</dd>
+              <dd className="text-xs text-muted-foreground">{building.floor_count} floors</dd>
             </div>
           </div>
         </div>
 
-        <div className="bg-white overflow-hidden shadow rounded-lg p-5">
+        <div className="bg-card border border-border overflow-hidden shadow rounded-lg p-5">
           <div className="flex items-center">
-            <Zap className="h-8 w-8 text-yellow-500 mr-3" />
+            <Zap className="h-8 w-8 text-yellow-500 dark:text-yellow-400 mr-3" />
             <div>
-              <dt className="text-sm font-medium text-gray-500">Electric (30d)</dt>
-              <dd className="text-2xl font-semibold text-gray-900">{building.total_electric_kwh.toLocaleString()} kWh</dd>
+              <dt className="text-sm font-medium text-muted-foreground">Electric (30d)</dt>
+              <dd className="text-2xl font-semibold text-foreground">{building.total_electric_kwh.toLocaleString()} kWh</dd>
               <dd className="text-xs text-green-600 flex items-center">
                 <TrendingDown className="h-3 w-3 mr-1" />
                 3.2% vs last month
@@ -151,12 +151,12 @@ export default function BuildingView() {
           </div>
         </div>
 
-        <div className="bg-white overflow-hidden shadow rounded-lg p-5">
+        <div className="bg-card border border-border overflow-hidden shadow rounded-lg p-5">
           <div className="flex items-center">
-            <Droplet className="h-8 w-8 text-blue-500 mr-3" />
+            <Droplet className="h-8 w-8 text-primary mr-3" />
             <div>
-              <dt className="text-sm font-medium text-gray-500">Water (30d)</dt>
-              <dd className="text-2xl font-semibold text-gray-900">{building.total_water_gallons.toLocaleString()} gal</dd>
+              <dt className="text-sm font-medium text-muted-foreground">Water (30d)</dt>
+              <dd className="text-2xl font-semibold text-foreground">{building.total_water_gallons.toLocaleString()} gal</dd>
               <dd className="text-xs text-green-600 flex items-center">
                 <TrendingDown className="h-3 w-3 mr-1" />
                 1.8% vs last month
@@ -165,48 +165,48 @@ export default function BuildingView() {
           </div>
         </div>
 
-        <div className="bg-white overflow-hidden shadow rounded-lg p-5">
+        <div className="bg-card border border-border overflow-hidden shadow rounded-lg p-5">
           <div className="flex items-center">
-            <Activity className="h-8 w-8 text-purple-500 mr-3" />
+            <Activity className="h-8 w-8 text-purple-500 dark:text-purple-400 mr-3" />
             <div>
-              <dt className="text-sm font-medium text-gray-500">Monitoring Devices</dt>
-              <dd className="text-2xl font-semibold text-gray-900">{devices.length}</dd>
-              <dd className="text-xs text-gray-500">{shellyDevices.length} Shelly + {ecodirectDevices.length} Ecodirect</dd>
+              <dt className="text-sm font-medium text-muted-foreground">Monitoring Devices</dt>
+              <dd className="text-2xl font-semibold text-foreground">{devices.length}</dd>
+              <dd className="text-xs text-muted-foreground">{shellyDevices.length} Shelly + {ecodirectDevices.length} Ecodirect</dd>
             </div>
           </div>
         </div>
       </div>
 
       {/* Building-Level Devices */}
-      <div className="bg-white shadow rounded-lg">
+      <div className="bg-card border border-border shadow rounded-lg">
         <div className="px-4 py-5 sm:p-6">
-          <h2 className="text-lg font-medium text-gray-900 mb-4">Building-Level Monitoring</h2>
+          <h2 className="text-lg font-medium text-foreground mb-4">Building-Level Monitoring</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {buildingMainDevices.map((device: any) => (
               <div
                 key={device.id}
                 className={`border rounded-lg p-4 ${
-                  device.alert ? 'border-red-300 bg-red-50' : 'border-gray-200'
+                  device.alert ? 'border-red-500/40 bg-red-50 dark:bg-red-900/20' : 'border-border'
                 }`}
               >
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex-1">
-                    <h3 className="font-semibold text-sm text-gray-900">{device.name}</h3>
-                    <p className="text-xs text-gray-500 mt-1">{device.location}</p>
-                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800 mt-2">
+                    <h3 className="font-semibold text-sm text-foreground">{device.name}</h3>
+                    <p className="text-xs text-muted-foreground mt-1">{device.location}</p>
+                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-primary/10 text-primary mt-2">
                       {device.type === 'shelly_pro_3em' ? 'Shelly Pro 3EM' : 'Ecodirect Main'}
                     </span>
                   </div>
                   <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                    device.status === 'online' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                    device.status === 'online' ? 'bg-success/10 text-success' : 'bg-muted text-muted-foreground'
                   }`}>
                     {device.status}
                   </span>
                 </div>
 
                 {device.alert && (
-                  <div className="mb-3 p-2 bg-red-100 border border-red-200 rounded">
-                    <p className="text-xs font-medium text-red-800 flex items-center">
+                  <div className="mb-3 p-2 bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded">
+                    <p className="text-xs font-medium text-red-800 dark:text-red-300 flex items-center">
                       <AlertTriangle className="h-3 w-3 mr-1" />
                       {device.alert}
                     </p>
@@ -216,46 +216,46 @@ export default function BuildingView() {
                 <div className="grid grid-cols-2 gap-3 text-sm">
                   {device.current_power_kw && (
                     <div>
-                      <span className="text-gray-600">Current Power</span>
-                      <p className="font-semibold text-gray-900">{device.current_power_kw} kW</p>
+                      <span className="text-muted-foreground">Current Power</span>
+                      <p className="font-semibold text-foreground">{device.current_power_kw} kW</p>
                     </div>
                   )}
                   {device.total_kwh_today && (
                     <div>
-                      <span className="text-gray-600">Today's Usage</span>
-                      <p className="font-semibold text-gray-900">{device.total_kwh_today} kWh</p>
+                      <span className="text-muted-foreground">Today's Usage</span>
+                      <p className="font-semibold text-foreground">{device.total_kwh_today} kWh</p>
                     </div>
                   )}
                   {device.current_flow_gpm !== undefined && (
                     <div>
-                      <span className="text-gray-600">Current Flow</span>
-                      <p className="font-semibold text-gray-900">{device.current_flow_gpm} GPM</p>
+                      <span className="text-muted-foreground">Current Flow</span>
+                      <p className="font-semibold text-foreground">{device.current_flow_gpm} GPM</p>
                     </div>
                   )}
                   {device.total_gallons_today && (
                     <div>
-                      <span className="text-gray-600">Today's Usage</span>
-                      <p className="font-semibold text-gray-900">{device.total_gallons_today.toLocaleString()} gal</p>
+                      <span className="text-muted-foreground">Today's Usage</span>
+                      <p className="font-semibold text-foreground">{device.total_gallons_today.toLocaleString()} gal</p>
                     </div>
                   )}
                   {device.voltage_l1 && (
                     <div className="col-span-2">
-                      <span className="text-gray-600">3-Phase Voltage</span>
-                      <p className="font-semibold text-gray-900 text-xs">
+                      <span className="text-muted-foreground">3-Phase Voltage</span>
+                      <p className="font-semibold text-foreground text-xs">
                         L1: {device.voltage_l1}V | L2: {device.voltage_l2}V | L3: {device.voltage_l3}V
                       </p>
                     </div>
                   )}
                   {device.power_factor && (
                     <div>
-                      <span className="text-gray-600">Power Factor</span>
-                      <p className="font-semibold text-gray-900">{device.power_factor}</p>
+                      <span className="text-muted-foreground">Power Factor</span>
+                      <p className="font-semibold text-foreground">{device.power_factor}</p>
                     </div>
                   )}
                   {device.pressure_psi && (
                     <div>
-                      <span className="text-gray-600">Pressure</span>
-                      <p className="font-semibold text-gray-900">{device.pressure_psi} PSI</p>
+                      <span className="text-muted-foreground">Pressure</span>
+                      <p className="font-semibold text-foreground">{device.pressure_psi} PSI</p>
                     </div>
                   )}
                 </div>
@@ -268,8 +268,8 @@ export default function BuildingView() {
       {/* Usage Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Electric Usage Chart */}
-        <div className="bg-white shadow rounded-lg p-6">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">Electric Usage (30 Days)</h3>
+        <div className="bg-card border border-border shadow rounded-lg p-6">
+          <h3 className="text-lg font-medium text-foreground mb-4">Electric Usage (30 Days)</h3>
           <ResponsiveContainer width="100%" height={250}>
             <AreaChart data={electricUsage}>
               <defs>
@@ -288,8 +288,8 @@ export default function BuildingView() {
         </div>
 
         {/* Water Usage Chart */}
-        <div className="bg-white shadow rounded-lg p-6">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">Water Usage (30 Days)</h3>
+        <div className="bg-card border border-border shadow rounded-lg p-6">
+          <h3 className="text-lg font-medium text-foreground mb-4">Water Usage (30 Days)</h3>
           <ResponsiveContainer width="100%" height={250}>
             <AreaChart data={waterUsage}>
               <defs>
@@ -309,27 +309,27 @@ export default function BuildingView() {
       </div>
 
       {/* Units List */}
-      <div className="bg-white shadow rounded-lg">
+      <div className="bg-card border border-border shadow rounded-lg">
         <div className="px-4 py-5 sm:p-6">
-          <h2 className="text-lg font-medium text-gray-900 mb-4">Units ({building.unit_count} total)</h2>
+          <h2 className="text-lg font-medium text-foreground mb-4">Units ({building.unit_count} total)</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
             {units.map((unit) => (
               <Link
                 key={unit.id}
                 to={`/units/${unit.id}`}
                 className={`border rounded-lg p-3 hover:shadow-md transition-shadow ${
-                  unit.occupied ? 'border-green-200 bg-green-50' : 'border-gray-200 bg-gray-50'
+                  unit.occupied ? 'border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900/20' : 'border-border bg-muted/50'
                 }`}
               >
                 <div className="flex items-center justify-between mb-2">
-                  <span className="font-semibold text-gray-900">#{unit.number}</span>
+                  <span className="font-semibold text-foreground">#{unit.number}</span>
                   <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
-                    unit.occupied ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'
+                    unit.occupied ? 'bg-success/10 text-success' : 'bg-muted text-muted-foreground'
                   }`}>
                     {unit.occupied ? 'Occupied' : 'Vacant'}
                   </span>
                 </div>
-                <div className="text-xs text-gray-600 space-y-1">
+                <div className="text-xs text-muted-foreground space-y-1">
                   <div className="flex items-center">
                     <Zap className="h-3 w-3 mr-1" />
                     {unit.electric_kwh_today.toFixed(1)} kWh

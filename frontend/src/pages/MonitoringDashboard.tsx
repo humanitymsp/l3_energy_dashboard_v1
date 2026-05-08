@@ -26,15 +26,15 @@ export default function MonitoringDashboard() {
       case 'critical':
         return 'bg-red-100 dark:bg-red-900/20 text-red-800 dark:text-red-300';
       default:
-        return 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300';
+        return 'bg-muted text-muted-foreground';
     }
   };
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Unified Monitoring Dashboard</h1>
-        <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+        <h1 className="text-3xl font-bold text-foreground">Unified Monitoring Dashboard</h1>
+        <p className="mt-2 text-sm text-muted-foreground">
           Single pane of glass for all property monitoring systems
         </p>
       </div>
@@ -46,23 +46,23 @@ export default function MonitoringDashboard() {
           return (
             <div
               key={category.id}
-              className="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg hover:shadow-lg transition-shadow"
+              className="bg-card border border-border overflow-hidden shadow rounded-lg hover:shadow-lg transition-shadow"
             >
               <div className="p-5">
                 <div className="flex items-center">
                   <div className="flex-shrink-0">
-                    <Icon className="h-8 w-8 text-blue-600 dark:text-blue-400" />
+                    <Icon className="h-8 w-8 text-primary" />
                   </div>
                   <div className="ml-5 w-0 flex-1">
                     <dl>
-                      <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">
+                      <dt className="text-sm font-medium text-muted-foreground truncate">
                         {category.name}
                       </dt>
                       <dd className="flex items-baseline">
-                        <div className="text-2xl font-semibold text-gray-900 dark:text-white">
+                        <div className="text-2xl font-semibold text-foreground">
                           {category.onlineCount}/{category.deviceCount}
                         </div>
-                        <div className="ml-2 text-sm text-gray-500 dark:text-gray-400">devices</div>
+                        <div className="ml-2 text-sm text-muted-foreground">devices</div>
                       </dd>
                     </dl>
                   </div>
@@ -78,7 +78,7 @@ export default function MonitoringDashboard() {
                       </span>
                     )}
                   </div>
-                  <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">{category.description}</p>
+                  <p className="mt-2 text-xs text-muted-foreground">{category.description}</p>
                 </div>
               </div>
             </div>
@@ -88,64 +88,64 @@ export default function MonitoringDashboard() {
 
       {/* System-Wide Stats */}
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
+        <div className="bg-card border border-border overflow-hidden shadow rounded-lg">
           <div className="p-5">
             <div className="flex items-center">
               <div className="flex-shrink-0">
-                <Camera className="h-6 w-6 text-gray-400 dark:text-gray-300" />
+                <Camera className="h-6 w-6 text-muted-foreground" />
               </div>
               <div className="ml-5 w-0 flex-1">
                 <dl>
-                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Total Cameras</dt>
-                  <dd className="text-3xl font-semibold text-gray-900 dark:text-white">{mockCameras.length}</dd>
+                  <dt className="text-sm font-medium text-muted-foreground truncate">Total Cameras</dt>
+                  <dd className="text-3xl font-semibold text-foreground">{mockCameras.length}</dd>
                 </dl>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
+        <div className="bg-card border border-border overflow-hidden shadow rounded-lg">
           <div className="p-5">
             <div className="flex items-center">
               <div className="flex-shrink-0">
-                <Lock className="h-6 w-6 text-gray-400 dark:text-gray-300" />
+                <Lock className="h-6 w-6 text-muted-foreground" />
               </div>
               <div className="ml-5 w-0 flex-1">
                 <dl>
-                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Access Points</dt>
-                  <dd className="text-3xl font-semibold text-gray-900 dark:text-white">{mockAccessPoints.length}</dd>
+                  <dt className="text-sm font-medium text-muted-foreground truncate">Access Points</dt>
+                  <dd className="text-3xl font-semibold text-foreground">{mockAccessPoints.length}</dd>
                 </dl>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
+        <div className="bg-card border border-border overflow-hidden shadow rounded-lg">
           <div className="p-5">
             <div className="flex items-center">
               <div className="flex-shrink-0">
-                <Wifi className="h-6 w-6 text-gray-400 dark:text-gray-300" />
+                <Wifi className="h-6 w-6 text-muted-foreground" />
               </div>
               <div className="ml-5 w-0 flex-1">
                 <dl>
-                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Network Devices</dt>
-                  <dd className="text-3xl font-semibold text-gray-900 dark:text-white">{mockNetworkStats.totalDevices}</dd>
+                  <dt className="text-sm font-medium text-muted-foreground truncate">Network Devices</dt>
+                  <dd className="text-3xl font-semibold text-foreground">{mockNetworkStats.totalDevices}</dd>
                 </dl>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
+        <div className="bg-card border border-border overflow-hidden shadow rounded-lg">
           <div className="p-5">
             <div className="flex items-center">
               <div className="flex-shrink-0">
-                <Users className="h-6 w-6 text-gray-400 dark:text-gray-300" />
+                <Users className="h-6 w-6 text-muted-foreground" />
               </div>
               <div className="ml-5 w-0 flex-1">
                 <dl>
-                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Connected Clients</dt>
-                  <dd className="text-3xl font-semibold text-gray-900 dark:text-white">{mockNetworkStats.totalClients}</dd>
+                  <dt className="text-sm font-medium text-muted-foreground truncate">Connected Clients</dt>
+                  <dd className="text-3xl font-semibold text-foreground">{mockNetworkStats.totalClients}</dd>
                 </dl>
               </div>
             </div>
@@ -155,14 +155,14 @@ export default function MonitoringDashboard() {
 
       {/* Correlated Events - AI-Powered Insights */}
       {correlatedEvents.length > 0 && (
-        <div className="bg-white dark:bg-gray-800 shadow rounded-lg">
+        <div className="bg-card border border-border shadow rounded-lg">
           <div className="px-4 py-5 sm:p-6">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h2 className="text-lg font-medium text-gray-900 dark:text-white">Correlated Events</h2>
-                <p className="text-sm text-gray-500 dark:text-gray-400">AI-powered multi-system event correlation</p>
+                <h2 className="text-lg font-medium text-foreground">Correlated Events</h2>
+                <p className="text-sm text-muted-foreground">AI-powered multi-system event correlation</p>
               </div>
-              <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-300">
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300">
                 <Activity className="h-4 w-4 mr-1" />
                 AI Insights
               </span>
@@ -184,7 +184,7 @@ export default function MonitoringDashboard() {
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-center space-x-2">
-                        <h3 className="text-sm font-semibold text-gray-900 dark:text-white">{event.title}</h3>
+                        <h3 className="text-sm font-semibold text-foreground">{event.title}</h3>
                         <span
                           className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
                             event.severity === 'critical'
@@ -197,12 +197,12 @@ export default function MonitoringDashboard() {
                           {event.severity}
                         </span>
                       </div>
-                      <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">{event.description}</p>
+                      <p className="mt-1 text-sm text-muted-foreground">{event.description}</p>
                       <div className="mt-2 flex flex-wrap gap-2">
                         {event.sources.map((source, idx) => (
                           <span
                             key={idx}
-                            className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300"
+                            className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-muted text-muted-foreground"
                           >
                             {source.type === 'camera' && <Camera className="h-3 w-3 mr-1" />}
                             {source.type === 'access' && <Lock className="h-3 w-3 mr-1" />}
@@ -213,7 +213,7 @@ export default function MonitoringDashboard() {
                         ))}
                       </div>
                       {event.estimatedImpact && (
-                        <div className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                        <div className="mt-2 text-xs text-muted-foreground">
                           {event.estimatedImpact.cost && (
                             <span className="mr-3">Est. Cost: ${event.estimatedImpact.cost}</span>
                           )}
@@ -222,7 +222,7 @@ export default function MonitoringDashboard() {
                           )}
                         </div>
                       )}
-                      <div className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                      <div className="mt-2 text-xs text-muted-foreground">
                         {event.location.propertyName} • {event.location.buildingName}
                         {event.location.unitNumber && ` • Unit ${event.location.unitNumber}`}
                       </div>
@@ -247,48 +247,48 @@ export default function MonitoringDashboard() {
       )}
 
       {/* Quick Links to Category Pages */}
-      <div className="bg-white dark:bg-gray-800 shadow rounded-lg">
+      <div className="bg-card border border-border shadow rounded-lg">
         <div className="px-4 py-5 sm:p-6">
-          <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Detailed Monitoring</h2>
+          <h2 className="text-lg font-medium text-foreground mb-4">Detailed Monitoring</h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <Link
               to="/monitoring/security"
-              className="flex items-center p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+              className="flex items-center p-4 border border-border rounded-lg hover:bg-muted/50 transition-colors"
             >
-              <Shield className="h-6 w-6 text-blue-600 dark:text-blue-400 mr-3" />
+              <Shield className="h-6 w-6 text-primary mr-3" />
               <div>
-                <p className="text-sm font-medium text-gray-900 dark:text-white">Physical Security</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">Cameras & Access</p>
+                <p className="text-sm font-medium text-foreground">Physical Security</p>
+                <p className="text-xs text-muted-foreground">Cameras & Access</p>
               </div>
             </Link>
             <Link
               to="/monitoring/network"
-              className="flex items-center p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+              className="flex items-center p-4 border border-border rounded-lg hover:bg-muted/50 transition-colors"
             >
-              <Wifi className="h-6 w-6 text-blue-600 dark:text-blue-400 mr-3" />
+              <Wifi className="h-6 w-6 text-primary mr-3" />
               <div>
-                <p className="text-sm font-medium text-gray-900 dark:text-white">Network</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">Infrastructure</p>
+                <p className="text-sm font-medium text-foreground">Network</p>
+                <p className="text-xs text-muted-foreground">Infrastructure</p>
               </div>
             </Link>
             <Link
               to="/monitoring/utilities"
-              className="flex items-center p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+              className="flex items-center p-4 border border-border rounded-lg hover:bg-muted/50 transition-colors"
             >
-              <Zap className="h-6 w-6 text-blue-600 dark:text-blue-400 mr-3" />
+              <Zap className="h-6 w-6 text-primary mr-3" />
               <div>
-                <p className="text-sm font-medium text-gray-900 dark:text-white">Utilities</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">Water & Electric</p>
+                <p className="text-sm font-medium text-foreground">Utilities</p>
+                <p className="text-xs text-muted-foreground">Water & Electric</p>
               </div>
             </Link>
             <Link
               to="/monitoring/environmental"
-              className="flex items-center p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+              className="flex items-center p-4 border border-border rounded-lg hover:bg-muted/50 transition-colors"
             >
-              <Thermometer className="h-6 w-6 text-blue-600 dark:text-blue-400 mr-3" />
+              <Thermometer className="h-6 w-6 text-primary mr-3" />
               <div>
-                <p className="text-sm font-medium text-gray-900 dark:text-white">Environmental</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">Temp & Humidity</p>
+                <p className="text-sm font-medium text-foreground">Environmental</p>
+                <p className="text-xs text-muted-foreground">Temp & Humidity</p>
               </div>
             </Link>
           </div>
