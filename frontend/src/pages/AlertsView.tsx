@@ -38,71 +38,71 @@ export default function AlertsView() {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-gray-900">Alerts</h1>
+        <h1 className="text-3xl font-bold text-foreground">Alerts</h1>
       </div>
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
-        <div className="bg-white overflow-hidden shadow rounded-lg p-5">
+        <div className="bg-card overflow-hidden shadow rounded-lg border border-border p-5">
           <div className="flex items-center">
-            <AlertTriangle className="h-6 w-6 text-red-500 mr-3" />
+            <AlertTriangle className="h-6 w-6 text-destructive mr-3" />
             <div>
-              <dt className="text-sm font-medium text-gray-500">Active</dt>
-              <dd className="text-2xl font-semibold text-red-600">{activeAlerts.length}</dd>
+              <dt className="text-sm font-medium text-muted-foreground">Active</dt>
+              <dd className="text-2xl font-semibold text-destructive">{activeAlerts.length}</dd>
             </div>
           </div>
         </div>
 
-        <div className="bg-white overflow-hidden shadow rounded-lg p-5">
+        <div className="bg-card overflow-hidden shadow rounded-lg border border-border p-5">
           <div className="flex items-center">
-            <AlertTriangle className="h-6 w-6 text-yellow-500 mr-3" />
+            <AlertTriangle className="h-6 w-6 text-yellow-500 dark:text-yellow-400 mr-3" />
             <div>
-              <dt className="text-sm font-medium text-gray-500">Acknowledged</dt>
-              <dd className="text-2xl font-semibold text-yellow-600">{acknowledgedAlerts.length}</dd>
+              <dt className="text-sm font-medium text-muted-foreground">Acknowledged</dt>
+              <dd className="text-2xl font-semibold text-yellow-600 dark:text-yellow-400">{acknowledgedAlerts.length}</dd>
             </div>
           </div>
         </div>
 
-        <div className="bg-white overflow-hidden shadow rounded-lg p-5">
+        <div className="bg-card overflow-hidden shadow rounded-lg border border-border p-5">
           <div className="flex items-center">
-            <CheckCircle className="h-6 w-6 text-green-500 mr-3" />
+            <CheckCircle className="h-6 w-6 text-success mr-3" />
             <div>
-              <dt className="text-sm font-medium text-gray-500">Resolved</dt>
-              <dd className="text-2xl font-semibold text-green-600">{resolvedAlerts.length}</dd>
+              <dt className="text-sm font-medium text-muted-foreground">Resolved</dt>
+              <dd className="text-2xl font-semibold text-success">{resolvedAlerts.length}</dd>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="bg-white shadow rounded-lg">
+      <div className="bg-card shadow rounded-lg border border-border">
         <div className="px-4 py-5 sm:p-6">
-          <h2 className="text-lg font-medium text-gray-900 mb-4">All Alerts</h2>
+          <h2 className="text-lg font-medium text-foreground mb-4">All Alerts</h2>
           <div className="space-y-3">
             {alerts.map((alert) => (
               <div
                 key={alert.id}
                 className={`p-4 rounded-lg border-l-4 ${
                   alert.severity === 'critical'
-                    ? 'bg-red-50 border-red-500'
+                    ? 'bg-red-50 dark:bg-red-900/20 border-red-500'
                     : alert.severity === 'high'
-                    ? 'bg-orange-50 border-orange-500'
+                    ? 'bg-orange-50 dark:bg-orange-900/20 border-orange-500'
                     : alert.severity === 'medium'
-                    ? 'bg-yellow-50 border-yellow-500'
-                    : 'bg-blue-50 border-blue-500'
+                    ? 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-500'
+                    : 'bg-blue-50 dark:bg-blue-900/20 border-blue-500'
                 }`}
               >
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center space-x-2">
-                      <p className="text-sm font-medium text-gray-900">{alert.title}</p>
+                      <p className="text-sm font-medium text-foreground">{alert.title}</p>
                       <span
                         className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                           alert.severity === 'critical'
-                            ? 'bg-red-100 text-red-800'
+                            ? 'bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-300'
                             : alert.severity === 'high'
-                            ? 'bg-orange-100 text-orange-800'
+                            ? 'bg-orange-100 dark:bg-orange-900/50 text-orange-800 dark:text-orange-300'
                             : alert.severity === 'medium'
-                            ? 'bg-yellow-100 text-yellow-800'
-                            : 'bg-blue-100 text-blue-800'
+                            ? 'bg-yellow-100 dark:bg-yellow-900/50 text-yellow-800 dark:text-yellow-300'
+                            : 'bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300'
                         }`}
                       >
                         {alert.severity}
@@ -110,17 +110,17 @@ export default function AlertsView() {
                       <span
                         className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                           alert.status === 'active'
-                            ? 'bg-red-100 text-red-800'
+                            ? 'bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-300'
                             : alert.status === 'acknowledged'
-                            ? 'bg-yellow-100 text-yellow-800'
-                            : 'bg-green-100 text-green-800'
+                            ? 'bg-yellow-100 dark:bg-yellow-900/50 text-yellow-800 dark:text-yellow-300'
+                            : 'bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300'
                         }`}
                       >
                         {alert.status}
                       </span>
                     </div>
-                    <p className="mt-1 text-sm text-gray-600">{alert.message}</p>
-                    <div className="mt-2 flex items-center space-x-4 text-xs text-gray-500">
+                    <p className="mt-1 text-sm text-muted-foreground">{alert.message}</p>
+                    <div className="mt-2 flex items-center space-x-4 text-xs text-muted-foreground">
                       <span>{alert.property_name}</span>
                       {alert.building_name && <span>{alert.building_name}</span>}
                       {alert.unit_number && <span>Unit {alert.unit_number}</span>}
@@ -131,7 +131,7 @@ export default function AlertsView() {
                     {alert.status === 'active' && (
                       <button
                         onClick={() => acknowledgeMutation.mutate(alert.id)}
-                        className="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded text-yellow-700 bg-yellow-100 hover:bg-yellow-200"
+                        className="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded text-yellow-700 dark:text-yellow-300 bg-yellow-100 dark:bg-yellow-900/50 hover:bg-yellow-200 dark:hover:bg-yellow-900/70"
                       >
                         Acknowledge
                       </button>
@@ -139,7 +139,7 @@ export default function AlertsView() {
                     {(alert.status === 'active' || alert.status === 'acknowledged') && (
                       <button
                         onClick={() => resolveMutation.mutate(alert.id)}
-                        className="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded text-green-700 bg-green-100 hover:bg-green-200"
+                        className="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded text-green-700 dark:text-green-300 bg-green-100 dark:bg-green-900/50 hover:bg-green-200 dark:hover:bg-green-900/70"
                       >
                         Resolve
                       </button>

@@ -39,7 +39,7 @@ export default function Layout({ children, user, signOut }: LayoutProps) {
                   </div>
                 </div>
               </div>
-              <div className="hidden md:ml-8 md:flex md:space-x-8">
+              <div className="hidden lg:ml-6 lg:flex lg:space-x-1">
                 {navigation.map((item) => {
                   const Icon = item.icon;
                   const isActive = location.pathname === item.href;
@@ -47,34 +47,34 @@ export default function Layout({ children, user, signOut }: LayoutProps) {
                     <Link
                       key={item.name}
                       to={item.href}
-                      className={`inline-flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                      className={`inline-flex items-center px-2.5 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                         isActive
                           ? 'bg-primary text-primary-foreground shadow-md'
                           : 'text-muted-foreground hover:bg-accent hover:text-foreground'
                       }`}
                     >
-                      <Icon className="h-4 w-4 mr-2" />
+                      <Icon className="h-4 w-4 mr-1.5" />
                       {item.name}
                     </Link>
                   );
                 })}
               </div>
             </div>
-            <div className="flex items-center space-x-2 sm:space-x-4">
+            <div className="flex items-center space-x-2 sm:space-x-3">
               <button
                 onClick={toggleTheme}
-                className="p-2 rounded-md text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 touch-manipulation"
+                className="p-2 rounded-lg text-muted-foreground hover:bg-accent hover:text-foreground transition-colors touch-manipulation"
                 aria-label="Toggle dark mode"
               >
                 {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
               </button>
-              <span className="hidden sm:inline text-sm text-gray-700 dark:text-gray-300">
+              <span className="hidden lg:inline text-sm text-muted-foreground">
                 {user?.signInDetails?.loginId || user?.username || 'User'}
               </span>
               {signOut && (
                 <button
                   onClick={signOut}
-                  className="hidden sm:inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
+                  className="hidden sm:inline-flex items-center px-3 py-2 text-sm font-medium rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition-opacity"
                 >
                   <LogOut className="h-4 w-4 mr-2" />
                   Sign Out
@@ -82,7 +82,7 @@ export default function Layout({ children, user, signOut }: LayoutProps) {
               )}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="md:hidden p-3 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 touch-manipulation border border-gray-300 dark:border-gray-600"
+                className="lg:hidden p-3 rounded-lg text-foreground hover:bg-accent touch-manipulation border border-border"
                 aria-label="Toggle menu"
               >
                 {mobileMenuOpen ? <X className="h-7 w-7" /> : <Menu className="h-7 w-7" />}
@@ -93,7 +93,7 @@ export default function Layout({ children, user, signOut }: LayoutProps) {
 
         {/* Mobile menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+          <div className="lg:hidden border-t border-border bg-card">
             <div className="px-2 pt-2 pb-3 space-y-1">
               {navigation.map((item) => {
                 const Icon = item.icon;
@@ -105,8 +105,8 @@ export default function Layout({ children, user, signOut }: LayoutProps) {
                     onClick={() => setMobileMenuOpen(false)}
                     className={`flex items-center px-4 py-4 rounded-lg text-lg font-medium touch-manipulation ${
                       isActive
-                        ? 'bg-blue-50 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300'
-                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+                        ? 'bg-primary/10 text-primary'
+                        : 'text-foreground hover:bg-accent'
                     }`}
                   >
                     <Icon className="h-6 w-6 mr-3" />

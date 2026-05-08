@@ -12,46 +12,46 @@ export default function IntegrationsView() {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-gray-900">Integrations</h1>
+        <h1 className="text-3xl font-bold text-foreground">Integrations</h1>
       </div>
 
-      <div className="bg-white shadow rounded-lg">
+      <div className="bg-card shadow rounded-lg border border-border">
         <div className="px-4 py-5 sm:p-6">
-          <h2 className="text-lg font-medium text-gray-900 mb-4">Connected Services</h2>
+          <h2 className="text-lg font-medium text-foreground mb-4">Connected Services</h2>
           <div className="space-y-4">
             {integrations.map((integration) => (
               <div
                 key={integration.name}
                 className={`flex items-center justify-between p-4 border rounded-lg ${
-                  integration.featured ? 'border-blue-300 bg-blue-50' : 'border-gray-200'
+                  integration.featured ? 'border-primary/40 bg-primary/5' : 'border-border'
                 }`}
               >
                 <div className="flex items-center space-x-3">
                   {integration.featured ? (
-                    <Shield className="h-6 w-6 text-blue-600" />
+                    <Shield className="h-6 w-6 text-primary" />
                   ) : integration.status === 'connected' ? (
-                    <Wifi className="h-6 w-6 text-green-500" />
+                    <Wifi className="h-6 w-6 text-success" />
                   ) : (
-                    <WifiOff className="h-6 w-6 text-red-500" />
+                    <WifiOff className="h-6 w-6 text-destructive" />
                   )}
                   <div>
-                    <p className="text-sm font-medium text-gray-900">
+                    <p className="text-sm font-medium text-foreground">
                       {integration.name}
                       {integration.featured && (
-                        <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
+                        <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-primary/10 text-primary">
                           Featured
                         </span>
                       )}
                     </p>
-                    <p className="text-xs text-gray-500">Last sync: {integration.lastSync}</p>
+                    <p className="text-xs text-muted-foreground">Last sync: {integration.lastSync}</p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-2">
                   <span
                     className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                       integration.status === 'connected'
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-red-100 text-red-800'
+                        ? 'bg-success/10 text-success'
+                        : 'bg-destructive/10 text-destructive'
                     }`}
                   >
                     <Activity className="h-3 w-3 mr-1" />
@@ -60,13 +60,13 @@ export default function IntegrationsView() {
                   {integration.detailsPath ? (
                     <Link
                       to={integration.detailsPath}
-                      className="inline-flex items-center px-3 py-1 border border-blue-300 text-xs font-medium rounded text-blue-700 bg-white hover:bg-blue-50"
+                      className="inline-flex items-center px-3 py-1 border border-primary/40 text-xs font-medium rounded text-primary bg-card hover:bg-primary/5"
                     >
                       View Details
                       <ExternalLink className="h-3 w-3 ml-1" />
                     </Link>
                   ) : (
-                    <button className="inline-flex items-center px-3 py-1 border border-gray-300 text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50">
+                    <button className="inline-flex items-center px-3 py-1 border border-border text-xs font-medium rounded text-foreground bg-card hover:bg-muted">
                       Configure
                     </button>
                   )}
@@ -77,13 +77,13 @@ export default function IntegrationsView() {
         </div>
       </div>
 
-      <div className="bg-blue-50 border-l-4 border-blue-400 p-4">
+      <div className="bg-primary/5 border-l-4 border-primary p-4 rounded-r-lg">
         <div className="flex">
           <div className="flex-shrink-0">
-            <Activity className="h-5 w-5 text-blue-400" />
+            <Activity className="h-5 w-5 text-primary" />
           </div>
           <div className="ml-3">
-            <p className="text-sm text-blue-700">
+            <p className="text-sm text-foreground">
               All integrations are operational. Data is being collected and processed in real-time.
             </p>
           </div>

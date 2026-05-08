@@ -68,13 +68,7 @@
 @layer components {
   .dashboard-card {
     @apply bg-card border border-border rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out;
-    background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 100%);
-    backdrop-filter: blur(10px);
-  }
-  
-  .dashboard-card-dark {
-    @apply bg-card border border-border rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out;
-    background: linear-gradient(135deg, rgba(30,41,59,0.9) 0%, rgba(30,41,59,0.7) 100%);
+    background: linear-gradient(135deg, hsl(var(--card)) 0%, hsl(var(--muted)/0.3) 100%);
     backdrop-filter: blur(10px);
   }
   
@@ -91,9 +85,9 @@
   }
   
   .glass-effect {
-    background: rgba(255, 255, 255, 0.1);
+    background: hsl(var(--card)/0.1);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid hsl(var(--border)/0.2);
   }
   
   .status-indicator {

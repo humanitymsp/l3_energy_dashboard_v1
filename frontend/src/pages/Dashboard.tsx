@@ -46,7 +46,7 @@ export default function Dashboard() {
   if (propertiesLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="text-gray-500 dark:text-gray-400">Loading...</div>
+        <div className="text-muted-foreground">Loading...</div>
       </div>
     );
   }
@@ -54,18 +54,18 @@ export default function Dashboard() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Portfolio Overview</h1>
+        <h1 className="text-3xl font-bold text-foreground">Portfolio Overview</h1>
         
         {/* Search Bar */}
         <div className="relative w-full sm:w-96">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Search className="h-5 w-5 text-gray-400" />
+            <Search className="h-5 w-5 text-muted-foreground" />
           </div>
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md leading-5 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            className="block w-full pl-10 pr-3 py-2 border border-border rounded-md leading-5 bg-card text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm"
             placeholder="Search properties, units, alerts..."
           />
         </div>
@@ -158,17 +158,17 @@ export default function Dashboard() {
       )}
 
       {/* Properties Grid */}
-      <div className="bg-white dark:bg-gray-800 shadow rounded-lg">
+      <div className="bg-card shadow rounded-lg border border-border">
         <div className="px-4 py-5 sm:p-6">
-          <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
+          <h2 className="text-lg font-medium text-foreground mb-4">
             Properties {searchQuery && `(${filteredProperties.length} results)`}
           </h2>
           {filteredProperties.length === 0 && searchQuery ? (
             <div className="text-center py-12">
-              <p className="text-gray-500 dark:text-gray-400">No properties found matching "{searchQuery}"</p>
+              <p className="text-muted-foreground">No properties found matching "{searchQuery}"</p>
               <button
                 onClick={() => setSearchQuery('')}
-                className="mt-2 text-sm text-blue-600 dark:text-blue-400 hover:underline"
+                className="mt-2 text-sm text-primary hover:underline"
               >
                 Clear search
               </button>
@@ -224,70 +224,70 @@ export default function Dashboard() {
       </div>
 
       {/* UniFi Integration Section */}
-      <div className="bg-white dark:bg-gray-800 shadow rounded-lg">
+      <div className="bg-card shadow rounded-lg border border-border">
         <div className="px-4 py-5 sm:p-6">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-3">
-              <div className="flex items-center justify-center w-10 h-10 bg-blue-600 dark:bg-blue-500 rounded-lg">
-                <Wifi className="h-6 w-6 text-white" />
+              <div className="flex items-center justify-center w-10 h-10 bg-primary rounded-lg">
+                <Wifi className="h-6 w-6 text-primary-foreground" />
               </div>
               <div>
-                <h2 className="text-lg font-medium text-gray-900 dark:text-white">UniFi Integration</h2>
-                <p className="text-sm text-gray-500 dark:text-gray-400">Protect • AlarmHub • Access</p>
+                <h2 className="text-lg font-medium text-foreground">UniFi Integration</h2>
+                <p className="text-sm text-muted-foreground">Protect • AlarmHub • Access</p>
               </div>
             </div>
             <Link
               to="/integrations/unifi"
-              className="text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-500"
+              className="text-sm font-medium text-primary hover:opacity-80"
             >
               View Details →
             </Link>
           </div>
           
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-4">
-            <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+            <div className="bg-muted/50 rounded-lg p-4">
               <div className="flex items-center space-x-2">
-                <Camera className="h-5 w-5 text-gray-400 dark:text-gray-300" />
-                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Cameras</p>
+                <Camera className="h-5 w-5 text-muted-foreground" />
+                <p className="text-sm font-medium text-muted-foreground">Cameras</p>
               </div>
-              <p className="mt-2 text-2xl font-semibold text-gray-900 dark:text-white">12</p>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">All online</p>
+              <p className="mt-2 text-2xl font-semibold text-foreground">12</p>
+              <p className="text-xs text-muted-foreground mt-1">All online</p>
             </div>
             
-            <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+            <div className="bg-muted/50 rounded-lg p-4">
               <div className="flex items-center space-x-2">
-                <Droplet className="h-5 w-5 text-gray-400 dark:text-gray-300" />
-                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Leak Sensors</p>
+                <Droplet className="h-5 w-5 text-muted-foreground" />
+                <p className="text-sm font-medium text-muted-foreground">Leak Sensors</p>
               </div>
-              <p className="mt-2 text-2xl font-semibold text-gray-900 dark:text-white">24</p>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">23 online</p>
+              <p className="mt-2 text-2xl font-semibold text-foreground">24</p>
+              <p className="text-xs text-muted-foreground mt-1">23 online</p>
             </div>
             
-            <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+            <div className="bg-muted/50 rounded-lg p-4">
               <div className="flex items-center space-x-2">
-                <AlertTriangle className="h-5 w-5 text-gray-400 dark:text-gray-300" />
-                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Events Today</p>
+                <AlertTriangle className="h-5 w-5 text-muted-foreground" />
+                <p className="text-sm font-medium text-muted-foreground">Events Today</p>
               </div>
-              <p className="mt-2 text-2xl font-semibold text-gray-900 dark:text-white">47</p>
-              <p className="text-xs text-green-600 dark:text-green-400 mt-1">3 correlated</p>
+              <p className="mt-2 text-2xl font-semibold text-foreground">47</p>
+              <p className="text-xs text-success mt-1">3 correlated</p>
             </div>
             
-            <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+            <div className="bg-muted/50 rounded-lg p-4">
               <div className="flex items-center space-x-2">
-                <TrendingUp className="h-5 w-5 text-gray-400 dark:text-gray-300" />
-                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Prevented Losses</p>
+                <TrendingUp className="h-5 w-5 text-muted-foreground" />
+                <p className="text-sm font-medium text-muted-foreground">Prevented Losses</p>
               </div>
-              <p className="mt-2 text-2xl font-semibold text-gray-900 dark:text-white">$8.2K</p>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">This month</p>
+              <p className="mt-2 text-2xl font-semibold text-foreground">$8.2K</p>
+              <p className="text-xs text-muted-foreground mt-1">This month</p>
             </div>
           </div>
         </div>
       </div>
 
       {filteredAlerts.length > 0 && (
-        <div className="bg-white dark:bg-gray-800 shadow rounded-lg">
+        <div className="bg-card shadow rounded-lg border border-border">
           <div className="px-4 py-5 sm:p-6">
-            <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
+            <h2 className="text-lg font-medium text-foreground mb-4">
               Recent Alerts {searchQuery && `(${filteredAlerts.length} results)`}
             </h2>
             <div className="space-y-3">
@@ -306,9 +306,9 @@ export default function Dashboard() {
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
-                      <p className="text-sm font-medium text-gray-900 dark:text-white">{alert.title}</p>
-                      <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">{alert.message}</p>
-                      <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                      <p className="text-sm font-medium text-foreground">{alert.title}</p>
+                      <p className="mt-1 text-sm text-muted-foreground">{alert.message}</p>
+                      <p className="mt-2 text-xs text-muted-foreground">
                         {alert.property_name} - {alert.building_name} - Unit {alert.unit_number}
                       </p>
                     </div>
@@ -332,7 +332,7 @@ export default function Dashboard() {
             <div className="mt-4">
               <Link
                 to="/alerts"
-                className="text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-500"
+                className="text-sm font-medium text-primary hover:opacity-80"
               >
                 View all alerts →
               </Link>
