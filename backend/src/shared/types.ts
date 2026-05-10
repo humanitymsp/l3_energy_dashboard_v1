@@ -12,6 +12,9 @@ export enum MetricType {
   OCCUPANCY = 'occupancy',
   SMOKE = 'smoke',
   CO = 'co',
+  SOLAR_KW = 'solar_kw',
+  SOLAR_KWH = 'solar_kwh',
+  NET_ENERGY_KW = 'net_energy_kw',
 }
 
 export enum ReadingStatus {
@@ -28,6 +31,7 @@ export enum IntegrationType {
   REST_METER = 'rest_meter',
   MODBUS_ADAPTER = 'modbus_adapter',
   WEBHOOK = 'webhook',
+  LEVITON = 'leviton',
 }
 
 export enum AnomalyType {

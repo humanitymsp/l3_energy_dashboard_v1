@@ -117,6 +117,22 @@ async function normalizePayload(payload: any): Promise<NormalizedReading> {
     };
   }
 
+  // Leviton Decora Smart / My Leviton cloud API payloads
+  if (payload.source === 'leviton' || payload.levitonDeviceId) {
+    return {
+      source: IntegrationType.LEVITON,
+      propertyExternalId: payload.propertyId || 'unknown',
+      buildingExternalId: payload.buildingId,
+      unitExternalId: payload.unitId,
+      deviceExternalId: payload.levitonDeviceId || payload.deviceId,
+      metricType: inferMetricType(payload.deviceType || '', payload.unit),
+      value: parseFloat(payload.power || payload.energy || payload.value || 0),
+      timestamp: payload.timestamp || new Date().toISOString(),
+      status: ReadingStatus.OK,
+      metadata: payload,
+    };
+  }
+
   throw new Error('Unable to normalize payload - unknown format');
 }
 
@@ -149,6 +165,18 @@ function inferMetricType(entityId: string, unit?: string): MetricType {
   }
   if (lowerEntity.includes('motion')) {
     return MetricType.MOTION;
+  }
+  if (lowerEntity.includes('solar') && (lowerEntity.includes('power') || unit === 'kW')) {
+    return MetricType.SOLAR_KW;
+  }
+  if (lowerEntity.includes('solar') && (lowerEntity.includes('energy') || unit === 'kWh')) {
+    return MetricType.SOLAR_KWH;
+  }
+  if (lowerEntity.includes('net') && lowerEntity.includes('energy')) {
+    return MetricType.NET_ENERGY_KW;
+  }
+  if (lowerEntity.includes('dimmer') || lowerEntity.includes('switch') || lowerEntity.includes('leviton')) {
+    return MetricType.ELECTRIC_KW;
   }
 
   return MetricType.ELECTRIC_KW;
@@ -231,7 +259,7 @@ async function persistReading(reading: NormalizedReading): Promise<void> {
 }
 
 async function triggerAnomalyDetection(reading: NormalizedReading): Promise<void> {
-  if (!['electric_kw', 'electric_kwh', 'water_gallons', 'water_flow_rate'].includes(reading.metricType)) {
+  if (!['electric_kw', 'electric_kwh', 'water_gallons', 'water_flow_rate', 'solar_kw', 'solar_kwh', 'net_energy_kw'].includes(reading.metricType)) {
     return;
   }
 

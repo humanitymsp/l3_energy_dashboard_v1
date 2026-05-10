@@ -1,4 +1,4 @@
-import axios, { AxiosInstance } from 'axios';
+import axios from 'axios';
 import { Logger } from '@aws-lambda-powertools/logger';
 
 const logger = new Logger({ serviceName: 'shelly-integration' });
@@ -28,7 +28,7 @@ export interface ShellyEMReading {
 export interface ShellyPro3EMReading {
   device_id: string;
   timestamp: string;
-  total_power: number; // kW
+  total_power: number; // kW (negative = exporting / solar surplus)
   phase_a: {
     voltage: number;
     current: number;
@@ -48,6 +48,7 @@ export interface ShellyPro3EMReading {
     power_factor: number;
   };
   total_kwh: number;
+  total_kwh_returned: number; // Energy exported back to grid (solar)
 }
 
 export class ShellyClient {
@@ -134,6 +135,7 @@ export class ShellyClient {
           power_factor: data.c_pf || 0,
         },
         total_kwh: (data.total_act_energy || 0) / 1000, // Convert Wh to kWh
+        total_kwh_returned: (data.total_act_ret_energy || 0) / 1000, // Solar export, Wh → kWh
       };
     } catch (error) {
       logger.error('Failed to get Shelly Pro 3EM status', { deviceId, error });

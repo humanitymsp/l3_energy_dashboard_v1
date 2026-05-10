@@ -4,7 +4,8 @@ export interface LaundryMachine {
   building_id?: string;
   unit_id?: string;
   machine_type: 'washer' | 'dryer';
-  brand: string;
+  provider: 'csc_serviceworks'; // CSC ServiceWorks is the laundry service provider
+  brand: string; // Machine manufacturer (e.g. Speed Queen)
   model: string;
   serial_number: string;
   location: string;
@@ -38,7 +39,7 @@ export interface LaundrySession {
   duration?: number; // in minutes
   cycle_type: 'quick' | 'normal' | 'heavy' | 'delicate';
   cost: number;
-  payment_method: 'card' | 'mobile' | 'coin' | 'app';
+  payment_method: 'card' | 'csc_go' | 'coin'; // CSC GO app, card reader, or coin
   status: 'active' | 'completed' | 'cancelled' | 'error';
   machine_type: 'washer' | 'dryer';
   revenue: number;
@@ -60,9 +61,8 @@ export interface LaundryRevenue {
   average_session_duration: number;
   payment_breakdown: {
     card: number;
-    mobile: number;
+    csc_go: number; // CSC GO mobile app payments
     coin: number;
-    app: number;
   };
 }
 
@@ -127,5 +127,5 @@ export interface LaundrySettings {
   maintenance_reminder_days: number;
   revenue_alert_threshold: number; // percentage drop
   auto_maintenance_scheduling: boolean;
-  payment_methods: ('card' | 'mobile' | 'coin' | 'app')[];
+  payment_methods: ('card' | 'csc_go' | 'coin')[];
 }

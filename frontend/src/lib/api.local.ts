@@ -32,8 +32,11 @@ export interface Property {
   electric_efficiency_score?: number;
   shelly_devices?: number;
   ecodirect_sensors?: number;
+  leviton_devices?: number;
   devices_online?: number;
   devices_total?: number;
+  solar_capacity_kw?: number;
+  solar_production_today_kwh?: number;
 }
 
 export interface Alert {
@@ -83,8 +86,11 @@ export const api = {
         electric_efficiency_score: 82,
         shelly_devices: 48,
         ecodirect_sensors: 48,
+        leviton_devices: 24,
         devices_online: 94,
         devices_total: 96,
+        solar_capacity_kw: 50,
+        solar_production_today_kwh: 185,
       },
       {
         id: 'prop-002',
@@ -108,8 +114,11 @@ export const api = {
         electric_efficiency_score: 79,
         shelly_devices: 72,
         ecodirect_sensors: 72,
+        leviton_devices: 36,
         devices_online: 140,
         devices_total: 144,
+        solar_capacity_kw: 75,
+        solar_production_today_kwh: 268,
       },
       {
         id: 'prop-003',
@@ -133,8 +142,11 @@ export const api = {
         electric_efficiency_score: 88,
         shelly_devices: 36,
         ecodirect_sensors: 36,
+        leviton_devices: 18,
         devices_online: 71,
         devices_total: 72,
+        solar_capacity_kw: 30,
+        solar_production_today_kwh: 112,
       },
       {
         id: 'prop-004',
@@ -158,8 +170,11 @@ export const api = {
         electric_efficiency_score: 84,
         shelly_devices: 54,
         ecodirect_sensors: 54,
+        leviton_devices: 27,
         devices_online: 105,
         devices_total: 108,
+        solar_capacity_kw: 45,
+        solar_production_today_kwh: 162,
       },
     ]);
   },
@@ -300,8 +315,9 @@ export const api = {
         property_id: 'prop-001',
         building_id: 'bldg-001',
         machine_type: 'washer',
+        provider: 'csc_serviceworks',
         brand: 'Speed Queen',
-        model: 'HC5',
+        model: 'SC40',
         serial_number: 'SQ-HC5-001',
         location: 'Building A - Floor 1',
         status: 'online',
@@ -326,8 +342,9 @@ export const api = {
         property_id: 'prop-001',
         building_id: 'bldg-001',
         machine_type: 'dryer',
+        provider: 'csc_serviceworks',
         brand: 'Speed Queen',
-        model: 'DC5',
+        model: 'ST40',
         serial_number: 'SQ-DC5-001',
         location: 'Building A - Floor 1',
         status: 'online',
@@ -351,9 +368,10 @@ export const api = {
         property_id: 'prop-001',
         building_id: 'bldg-002',
         machine_type: 'washer',
-        brand: 'Maytag',
-        model: 'MLG5000P',
-        serial_number: 'MG-MLG5-002',
+        provider: 'csc_serviceworks',
+        brand: 'Speed Queen',
+        model: 'SC60',
+        serial_number: 'SQ-SC60-002',
         location: 'Building B - Floor 2',
         status: 'maintenance',
         last_maintenance: '2024-04-15',
@@ -376,9 +394,10 @@ export const api = {
         property_id: 'prop-002',
         building_id: 'bldg-003',
         machine_type: 'dryer',
-        brand: 'Whirlpool',
-        model: 'WGD5000DW',
-        serial_number: 'WP-WGD5-002',
+        provider: 'csc_serviceworks',
+        brand: 'Speed Queen',
+        model: 'ST60',
+        serial_number: 'SQ-ST60-002',
         location: 'Building C - Floor 1',
         status: 'offline',
         last_maintenance: '2024-02-15',
@@ -414,7 +433,7 @@ export const api = {
         start_time: new Date(Date.now() - 15 * 60000).toISOString(),
         cycle_type: 'normal',
         cost: 5.00,
-        payment_method: 'mobile',
+        payment_method: 'csc_go',
         status: 'active',
         machine_type: 'washer',
         revenue: 5.00,
@@ -430,7 +449,7 @@ export const api = {
         start_time: new Date(Date.now() - 8 * 60000).toISOString(),
         cycle_type: 'normal',
         cost: 4.00,
-        payment_method: 'app',
+        payment_method: 'csc_go',
         status: 'active',
         machine_type: 'dryer',
         revenue: 4.00,
@@ -485,7 +504,7 @@ export const api = {
         const baseSess = baseSessions[propId as keyof typeof baseSessions];
         const totalRev = +(base * weekendMultiplier * variance).toFixed(2);
         const sessions = Math.round(baseSess * weekendMultiplier * variance);
-        const cardPct = 0.4, mobilePct = 0.3, coinPct = 0.2, appPct = 0.1;
+        const cardPct = 0.45, cscGoPct = 0.35, coinPct = 0.20;
 
         revenue.push({
           id: `rev-${propId}-${dayOffset}`,
@@ -501,9 +520,8 @@ export const api = {
           average_session_duration: 35 + Math.random() * 10,
           payment_breakdown: {
             card: +(totalRev * cardPct).toFixed(2),
-            mobile: +(totalRev * mobilePct).toFixed(2),
+            csc_go: +(totalRev * cscGoPct).toFixed(2),
             coin: +(totalRev * coinPct).toFixed(2),
-            app: +(totalRev * appPct).toFixed(2)
           }
         });
       }
@@ -604,7 +622,7 @@ export const api = {
       maintenance_reminder_days: 90,
       revenue_alert_threshold: 15,
       auto_maintenance_scheduling: true,
-      payment_methods: ['card', 'mobile', 'app', 'coin']
+      payment_methods: ['card', 'csc_go', 'coin']
     };
 
     return Promise.resolve(settings);

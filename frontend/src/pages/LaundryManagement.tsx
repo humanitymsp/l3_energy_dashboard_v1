@@ -9,7 +9,6 @@ import {
   CreditCard,
   Smartphone,
   Coins,
-  Package,
   ArrowUp,
   ArrowDown,
   RefreshCw,
@@ -96,7 +95,7 @@ export default function LaundryManagement() {
   };
 
   const handleExportCSV = () => {
-    const headers = ['Date', 'Property', 'Revenue', 'Sessions', 'Card', 'Mobile', 'Coin', 'App'];
+    const headers = ['Date', 'Property', 'Revenue', 'Sessions', 'Card', 'CSC GO', 'Coin'];
     const rows = revenue.map(r => {
       const propName = properties.find(p => p.id === r.property_id)?.name || r.property_id;
       return [
@@ -105,9 +104,8 @@ export default function LaundryManagement() {
         r.total_revenue.toFixed(2),
         r.total_sessions,
         r.payment_breakdown.card.toFixed(2),
-        r.payment_breakdown.mobile.toFixed(2),
+        r.payment_breakdown.csc_go.toFixed(2),
         r.payment_breakdown.coin.toFixed(2),
-        r.payment_breakdown.app.toFixed(2),
       ].join(',');
     });
     const csv = [headers.join(','), ...rows].join('\n');
@@ -123,9 +121,8 @@ export default function LaundryManagement() {
   const getPaymentIcon = (method: string) => {
     switch (method) {
       case 'card': return <CreditCard className="h-4 w-4" />;
-      case 'mobile': return <Smartphone className="h-4 w-4" />;
+      case 'csc_go': return <Smartphone className="h-4 w-4" />;
       case 'coin': return <Coins className="h-4 w-4" />;
-      case 'app': return <Package className="h-4 w-4" />;
       default: return <CreditCard className="h-4 w-4" />;
     }
   };
@@ -487,7 +484,7 @@ export default function LaundryManagement() {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-4">
-            {['card', 'mobile', 'coin', 'app'].map((method) => {
+            {['card', 'csc_go', 'coin'].map((method) => {
               const methodRevenue = revenue.reduce((sum, r) => sum + (r.payment_breakdown[method as keyof typeof r.payment_breakdown] || 0), 0);
               const percentage = totalRevenue > 0 ? (methodRevenue / totalRevenue) * 100 : 0;
               
